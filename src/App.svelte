@@ -43,6 +43,10 @@
 		Click on the Vite and Svelte logos to learn more
 	</p>
 
+	<div id="progress-bar-container">
+		<div id="progress-bar" />
+	</div>
+
 	<script>
 		const audioContext = new (window.AudioContext ||
 			window.webkitAudioContext)();
@@ -83,6 +87,17 @@
 
 		let currentChapter = null;
 		let currentSource = null;
+		let currentSourceStartTime = null;
+
+		function updateProgressBar(duration) {
+			const progressBar = document.getElementById("progress-bar");
+			progressBar.style.transitionDuration = `${duration}s`;
+			progressBar.style.width = "100%";
+			setTimeout(() => {
+				progressBar.style.width = "0%";
+				progressBar.style.transitionDuration = "0s";
+			}, duration * 1000);
+		}
 
 		function playAudioBuffer(buffer, loop, onEnded) {
 			const source = audioContext.createBufferSource();
@@ -138,12 +153,42 @@
 				);
 			}
 
+			if (currentSource && newChapter !== 1) {
+				const elapsedTime =
+					audioContext.currentTime - currentSourceStartTime;
+				const loopTimeRemaining =
+					currentSource.buffer.duration -
+					(elapsedTime % currentSource.buffer.duration);
+				const progressBarDuration =
+					loopTimeRemaining +
+					(endingAudio ? endingAudio.duration : 0);
+				updateProgressBar(progressBarDuration);
+			}
+
 			currentChapter = newChapter;
 		}
 	</script>
 </main>
 
 <style>
+	#progress-bar-container {
+		position: relative;
+		width: 100%;
+		height: 5px;
+		background-color: #eee;
+	}
+
+	#progress-bar {
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 5px;
+		width: 0%;
+		background-color: #2196f3;
+		transition-property: width;
+		transition-timing-function: linear;
+	}
+
 	.logo {
 		height: 6em;
 		padding: 1.5em;
