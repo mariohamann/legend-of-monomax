@@ -5,10 +5,6 @@
 </script>
 
 <main>
-	<!-- <audio id="myAudio" src="/src/assets/HeadlessHeroMastered.aif"></audio>
-  <button type="button" data-start="8.727" data-stop="17.454">1</button>
-  <button type="button" data-start="17.455" data-stop="28.182">1</button> -->
-
 	<div>
 		<button type="button" data-chapter="1" onclick="changeChapter(1)"
 			>1</button
@@ -18,6 +14,9 @@
 		>
 		<button type="button" data-chapter="3" onclick="changeChapter(3)"
 			>3</button
+		>
+		<button type="button" data-chapter="3" onclick="changeChapter(4)"
+			>4</button
 		>
 		<a href="https://vitejs.dev" target="_blank" rel="noreferrer">
 			<img src={viteLogo} class="logo" alt="Vite Logo" />
@@ -55,19 +54,30 @@
 			return audioBuffer;
 		}
 
-		const audioFiles = {
-			"1-loop": "/src/assets/audio/1-loop.m4a",
-			"2-loop": "/src/assets/audio/2-loop.m4a",
-			"2-ending": "/src/assets/audio/2-ending.m4a",
-			"3-loop": "/src/assets/audio/3-loop.m4a",
-			"3-ending": "/src/assets/audio/3-ending.m4a",
-		};
-
+		function getAudioUrls(chapter) {
+			const basePath = "/src/assets/audio/";
+			const loopUrl = `${basePath}${chapter}-loop.m4a`;
+			const endingUrl = `${basePath}${chapter}-ending.m4a`;
+			return { loopUrl, endingUrl };
+		}
+		const numberOfChapters = 11;
 		const audioBuffers = {};
 
 		(async () => {
-			for (const id in audioFiles) {
-				audioBuffers[id] = await loadAudio(audioFiles[id]);
+			for (let chapter = 1; chapter <= numberOfChapters; chapter++) {
+				const { loopUrl, endingUrl } = getAudioUrls(chapter);
+
+				// Chapter 11 only has an ending
+				if (chapter < numberOfChapters) {
+					audioBuffers[`${chapter}-loop`] = await loadAudio(loopUrl);
+				}
+
+				// Chapter 1 only has a loop
+				if (chapter > 1 && chapter < numberOfChapters) {
+					audioBuffers[`${chapter}-ending`] = await loadAudio(
+						endingUrl
+					);
+				}
 			}
 		})();
 
@@ -98,34 +108,34 @@
 				currentSource.onended = null;
 			}
 
-			let nextAudio;
-			let endingAudio;
-
-			if (newChapter === 1) {
-				nextAudio = audioBuffers["1-loop"];
-				endingAudio = null;
-			} else if (newChapter === 2) {
-				nextAudio = audioBuffers["2-loop"];
-				endingAudio = null;
-			} else if (newChapter === 3) {
-				nextAudio = audioBuffers["3-loop"];
-				endingAudio =
-					currentChapter === 2 ? audioBuffers["2-ending"] : null;
-			}
+			let nextAudio = audioBuffers[`${newChapter}-loop`];
+			let endingAudio =
+				currentChapter && currentChapter !== numberOfChapters
+					? audioBuffers[`${currentChapter}-ending`]
+					: null;
 
 			if (currentSource) {
 				currentSource.onended = () => {
 					if (endingAudio) {
 						const source = playAudioBuffer(endingAudio, false);
 						source.onended = () => {
-							currentSource = playAudioBuffer(nextAudio, true);
+							currentSource = playAudioBuffer(
+								nextAudio,
+								newChapter !== numberOfChapters
+							);
 						};
 					} else {
-						currentSource = playAudioBuffer(nextAudio, true);
+						currentSource = playAudioBuffer(
+							nextAudio,
+							newChapter !== numberOfChapters
+						);
 					}
 				};
 			} else {
-				currentSource = playAudioBuffer(nextAudio, true);
+				currentSource = playAudioBuffer(
+					nextAudio,
+					newChapter !== numberOfChapters
+				);
 			}
 
 			currentChapter = newChapter;
