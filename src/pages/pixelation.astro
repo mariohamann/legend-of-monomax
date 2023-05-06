@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>Pixel Animation</title>
+	</head>
+	<body>
+		<button id='animate-btn'>Animate</button>
+		<div id='content-container' style='position: relative'>
+			This is some Content
+		</div>
+		<script>
+			import PixelAnimation from "../js/PixelAnimation.js";
+
+			const animateBtn = document.getElementById("animate-btn");
+
+			const contentContainer =
+				document.getElementById("content-container");
+
+			const pixelAnimation = new PixelAnimation({
+				blockSize: 4,
+			});
+
+			// Attach the event listener to the button
+			animateBtn.addEventListener("click", async () => {
+				await pixelAnimation.createPixels(500);
+				await pixelAnimation.sleep(100);
+				await pixelAnimation.removePixels(500);
+			});
+		</script>
+	</body>
+</html>
