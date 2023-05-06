@@ -1,6 +1,7 @@
 
 class PixelAnimation {
   constructor(options = {}) {
+    this.fullscreen = !options.el;
     this.el = options.el || document.body;
     this.color = options.color || "black";
     this.blockSize = options.blockSize || 2;
@@ -17,16 +18,19 @@ class PixelAnimation {
 
     // Set canvas dimensions
     this.canvas.width =
-      this.el === document.body
+      this.fullscreen
         ? window.innerWidth
         : this.el.offsetWidth;
     this.canvas.height =
-      this.el === document.body
+      this.fullscreen
         ? window.innerHeight
         : this.el.offsetHeight;
 
     // Set canvas position to absolute
-    this.canvas.style.position = "absolute";
+    this.canvas.style.position =
+      this.fullscreen
+        ? 'fixed'
+        : "absolute";
     this.canvas.style.top = "0";
     this.canvas.style.left = "0";
 
@@ -59,13 +63,29 @@ class PixelAnimation {
     return { iterations, sleepDuration };
   }
 
+  getDurations(duration) {
+    if (typeof duration === "number") {
+      return {
+        in: duration / 2,
+        pause: 1,
+        out: duration / 2
+      }
+    } else {
+      return {
+        in: duration.in,
+        pause: duration.pause,
+        out: duration.out
+      }
+    }
+  }
+
   async createPixels(customDuration) {
     this.createCanvas();
 
     const inDuration = customDuration || this.getDurations(this.duration).in;
 
     // Disable scrolling and show the canvas
-    document.body.style.overflow = "hidden";
+    if (this.fullscreen) document.body.style.overflow = "hidden";
     this.canvas.style.display = "block";
 
     // Generate an array of all possible pixel blocks
@@ -121,22 +141,6 @@ class PixelAnimation {
     }
   }
 
-  getDurations(duration) {
-    if (typeof duration === "number") {
-      return {
-        in: duration / 2,
-        pause: 1,
-        out: duration / 2
-      }
-    } else {
-      return {
-        in: duration.in,
-        pause: duration.pause,
-        out: duration.out
-      }
-    }
-  }
-
   async removePixels(customDuration) {
     const outDuration = customDuration || this.getDurations(this.duration).out;
 
@@ -171,7 +175,7 @@ class PixelAnimation {
 
     // Hide the canvas and enable scrolling
     this.canvas.style.display = "none";
-    document.body.style.overflow = "auto";
+    if (this.fullscreen) document.body.style.overflow = "auto";
 
     this.removeCanvas();
   }

@@ -4,30 +4,137 @@
 		<meta charset='UTF-8' />
 		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 		<title>Pixel Animation</title>
-	</head>
-	<body>
-		<button id='animate-btn'>Animate</button>
-		<div id='content-container' style='position: relative'>
-			This is some Content
-		</div>
+
 		<script>
 			import PixelAnimation from "../js/PixelAnimation.js";
 
-			const animateBtn = document.getElementById("animate-btn");
+			document.addEventListener("alpine:init", () => {
+				Alpine.store("chapter", {
+					chapter: 1,
+					content: {
+						1: {
+							title: "I. The Power Paradox",
+							image: "/images/chapter-1.png",
+							text: [
+								"In a vibrant pixelated city, MonoMax soars through the sky, his cape billowing behind her. He is the all-powerful superhero who can handle any web content challenge with his wide array of monolithic CMS abilities.",
+								"Lately, however, whispers of the new generation of superheroes, the HeadlessHeroes, have reached his ears. They speak of increased flexibility and adaptability, leaving MonoMax feeling overwhelmed by the sheer weight of his powers.",
+							],
+						},
+						2: {
+							title: "II. The Headless Heroes",
+							image: "/images/chapter-2.png",
+							text: [
+								"The Headless Heroes are a group of superheroes who have the ability to adapt to any situation. They are able to do this because they are not tied to any one CMS. They can use any CMS they want, and they can even use multiple CMSs at once.",
+								"MonoMax is a superhero who has the ability to handle any web content challenge with his wide array of monolithic CMS abilities. He is able to do this because he is tied to a single CMS. He can only use one CMS at a time, and he can only use one CMS at a time.",
+							],
+						},
+					},
 
-			const contentContainer =
-				document.getElementById("content-container");
-
-			const pixelAnimation = new PixelAnimation({
-				blockSize: 4,
-			});
-
-			// Attach the event listener to the button
-			animateBtn.addEventListener("click", async () => {
-				await pixelAnimation.createPixels(500);
-				await pixelAnimation.sleep(100);
-				await pixelAnimation.removePixels(500);
+					async toggle() {
+						const pixelAnimation = new PixelAnimation({
+							color: "#1F0E1C",
+							blockSize: 4,
+						});
+						await pixelAnimation.createPixels(1000);
+						await pixelAnimation.sleep(100);
+						this.chapter = this.chapter === 2 ? 1 : 2;
+						await pixelAnimation.removePixels(200);
+					},
+				});
 			});
 		</script>
+		<style>
+			/* vt323-regular - latin */
+			@font-face {
+				font-display: block; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+				font-family: "VT323";
+				font-style: normal;
+				font-weight: 400;
+				src: url("/fonts/vt323-v17-latin-regular.woff2") format("woff2"),
+					/* Chrome 36+, Opera 23+, Firefox 39+ */
+						url("/fonts/vt323-v17-latin-regular.woff")
+						format("woff"); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+			}
+		</style>
+	</head>
+	<body
+		x-data
+		class='font-code text-base bg-primary text-secondary px-8 py-12'
+	>
+		<h1
+			x-show='$store.chapter.chapter===1'
+			class='max-w-xl mx-auto text-4xl'
+		>
+			I. The Power Paradox
+		</h1>
+		<h1
+			x-show='$store.chapter.chapter===2'
+			class='max-w-xl mx-auto text-4xl'
+		>
+			II. The Ability Abyss
+		</h1>
+		<img
+			src='/images/chapter-1.png'
+			x-bind:src='`/images/chapter-${$store.chapter.chapter}.png`'
+			class='max-w-2xl mx-auto w-full my-12'
+			style='image-rendering: pixelated;'
+		/>
+		<div
+			class='max-w-xl mx-auto gap-y-5 flex-col flex'
+			x-show='$store.chapter.chapter===1'
+		>
+			<p>
+				In a vibrant pixelated city, MonoMax soars through the sky, his
+				cape billowing behind her. He is the all-powerful superhero who
+				can handle any web content challenge with his wide array of
+				monolithic CMS abilities.
+			</p>
+			<p>
+				Lately, however, whispers of the new generation of superheroes,
+				the HeadlessHeroes, have reached his ears. They speak of
+				increased flexibility and adaptability, leaving MonoMax feeling
+				overwhelmed by the sheer weight of his powers.
+			</p>
+			<div class='w-full text-center'>
+				<button
+					@click='$store.chapter.toggle()'
+					class='border-2 mt-4 outline-none border-secondary px-2 py-1 hover:bg-secondary focus:bg-secondary hover:text-primary focus:text-primary'
+					>Continue ></button
+				>
+			</div>
+		</div>
+		<div
+			class='max-w-xl mx-auto gap-y-5 flex-col flex'
+			x-show='$store.chapter.chapter===2'
+		>
+			<p>
+				One day, after foiling a nefarious plot, MonoMax finds himself
+				perched on a rooftop, contemplating his future. The city's
+				lights twinkle below him as he ponders the possibility of
+				shedding some of his powers, starting with his form handling
+				abilities. As he gazes out at the city he has sworn to protect,
+				he wonders what reasons could justify his decision.
+			</p>
+			<div class='bg-secondary text-primary p-6'>
+				<p class='mb-2'>
+					Why should MonoMax drop his form handling powers?
+				</p>
+				<div class='w-full'>
+					<button
+						class='text-left leading-8'
+						@click='$store.chapter.toggle()'
+					>
+						> Dodge the infamous Spambot Squad, notorious for
+						flooding unwanted submissions!
+						<br />
+						<span class='text-secondary'>></span> Evade the cunning Phisherman,
+						scheming to compromise his secure data fortress!
+						<br />
+						<span class='text-secondary'>></span> Avoid Field Fiddler,
+						exploiting vulnerable fields to wreak web content havoc!
+					</button>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
