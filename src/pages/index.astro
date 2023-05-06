@@ -14,10 +14,16 @@
 
 		<main>
 			<div>
-				<button type='button' data-chapter='1'>1</button>
-				<button type='button' data-chapter='2'>2</button>
-				<button type='button' data-chapter='3'>3</button>
-				<button type='button' data-chapter='3'>4</button>
+				{
+					// Loop from 1 to 11 with buttons
+					Array.from({ length: 11 }, (_, i) => i + 1).map(
+						(chapter) => (
+							<button type='button' data-chapter={chapter}>
+								{chapter}
+							</button>
+						)
+					)
+				}
 			</div>
 
 			<script>
