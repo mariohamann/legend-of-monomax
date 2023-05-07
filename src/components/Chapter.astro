@@ -1,6 +1,7 @@
 ---
 import Question from "./Question.astro";
 import Continue from "./Continue.astro";
+import OnlyWithJs from "./OnlyWithJs.astro";
 
 export interface Props {
 	title: string;
@@ -24,13 +25,15 @@ const { chapter, question, title } = Astro.props;
 	/>
 	<div class='max-w-xl mx-auto gap-y-5 flex-col flex'>
 		<slot />
-		{
-			question ? (
-				<Question to={chapter + 1} question={question} />
-			) : (
-				<Continue to={chapter + 1} />
-			)
-		}
+		<OnlyWithJs>
+			{
+				question ? (
+					<Question to={chapter + 1} question={question} />
+				) : (
+					<Continue to={chapter + 1} />
+				)
+			}
+		</OnlyWithJs>
 	</div>
 	<div class='max-w-xl mx-auto gap-y-5 flex-col flex'></div>
 </div>
