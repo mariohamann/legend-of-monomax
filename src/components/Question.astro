@@ -1,0 +1,28 @@
+---
+export interface Props {
+	to: number;
+	question: {
+		text: string;
+		answers: string[];
+	};
+}
+
+const { to, question } = Astro.props;
+---
+
+<div class='bg-secondary text-primary p-6'>
+	<p class='mb-2'>Why should MonoMax drop his form handling powers?</p>
+	<div class='w-full space-y-2'>
+    {
+      question.answers.map((answer, index) => (
+        <a
+          href=`#chapter-${to}`
+          class='flex w-full text-left group leading-snug outline-none'
+        >
+          <span class="group-focus:text-primary group-hover:text-primary text-shade w-6 inline-block" >&gt;</span>
+          <span class="group-hover:underline group-focus:underline">{answer}</span>
+        </a>
+      ))
+    }
+	</div>
+</div>

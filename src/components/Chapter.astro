@@ -1,0 +1,36 @@
+---
+import Question from "./Question.astro";
+import Continue from "./Continue.astro";
+
+export interface Props {
+	title: string;
+	chapter: number;
+	question?: {
+		text: string;
+		answers: string[];
+	};
+}
+
+const { chapter, question, title } = Astro.props;
+---
+
+<div x-show=`$store.chapter===${chapter}`>
+	<h1 class='max-w-xl mx-auto text-4xl'>
+		{title}
+	</h1>
+	<img
+		src=`/images/chapter-${chapter}.png`
+		class='max-w-2xl mx-auto w-full my-12'
+	/>
+	<div class='max-w-xl mx-auto gap-y-5 flex-col flex'>
+		<slot />
+		{
+			question ? (
+				<Question to={chapter + 1} question={question} />
+			) : (
+				<Continue to={chapter + 1} />
+			)
+		}
+	</div>
+	<div class='max-w-xl mx-auto gap-y-5 flex-col flex'></div>
+</div>

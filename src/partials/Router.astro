@@ -1,0 +1,39 @@
+<script>
+	document.addEventListener("alpine:init", () => {
+		Alpine.store("chapter", 1); // Initialize the store with the first chapter
+
+		const getChapterFromUrl = () => {
+			const chapterMatch = location.hash.match(/chapter-(\d+)/);
+			if (chapterMatch) {
+				const chapterNumber = parseInt(chapterMatch[1]);
+				return chapterNumber;
+			} else {
+				return 1;
+			}
+		};
+
+		const setChapterAccordingToHash = () => {
+			Alpine.store("chapter", getChapterFromUrl());
+		};
+
+		// DEBUG
+		setChapterAccordingToHash();
+
+		// PRODUCTION
+		// if (getChapterFromUrl() > 1) {
+		// 	if (
+		// 		confirm(
+		// 			`Do you want to jump to chapter ${getChapterFromUrl()}? Cancel to start from the beginning.`
+		// 		) == true
+		// 	) {
+		// 		setChapterAccordingToHash(); // Set the chapter according to the hash on page load
+		// 	} else {
+		// 		location.hash = "#chapter-1";
+		// 		Alpine.store("chapter", 1);
+		// 	}
+		// }
+
+		// Listen for changes in the URL
+		window.addEventListener("hashchange", setChapterAccordingToHash);
+	});
+</script>
