@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>Pixel Animation</title>
+	</head>
+	<body
+		><div id='app' x-data>
+			<div x-show='$store.currentChapter == 1'>
+				<h1>Chapter 1</h1>
+				<p>Chapter 1 content...</p>
+				<a href='#chapter-2'>Continue</a>
+			</div>
+
+			<div x-show='$store.currentChapter == 2' style='display: none;'>
+				<h1>Chapter 2</h1>
+				<p>Chapter 2 content...</p>
+				<a href='#chapter-3'>Continue</a>
+			</div>
+
+			<!-- Add more chapters as needed -->
+		</div>
+		<script>
+			document.addEventListener("alpine:init", () => {
+				Alpine.store("currentChapter", 1); // Initialize the store with the first chapter
+
+				const getChapterFromUrl = () => {
+					const chapterMatch = location.hash.match(/chapter-(\d+)/);
+					if (chapterMatch) {
+						const chapterNumber = parseInt(chapterMatch[1]);
+						return chapterNumber;
+					} else {
+						return 0;
+					}
+				};
+
+				const setChapterAccordingToHash = () => {
+					Alpine.store("currentChapter", getChapterFromUrl());
+				};
+
+				if (getChapterFromUrl() > 0) {
+					if (
+						confirm(
+							`Do you want to jump to chapter ${getChapterFromUrl()}? Cancel to start from the beginning.`
+						) == true
+					) {
+						setChapterAccordingToHash(); // Set the chapter according to the hash on page load
+					} else {
+						Alpine.store("currentChapter", 1);
+					}
+				}
+
+				// Listen for changes in the URL
+				window.addEventListener(
+					"hashchange",
+					setChapterAccordingToHash
+				);
+			});
+		</script>
+	</body>
+</html>
