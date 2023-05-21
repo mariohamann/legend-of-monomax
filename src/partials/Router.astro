@@ -1,4 +1,6 @@
 <script>
+	import PixelAnimation from "../js/PixelAnimation.js";
+
 	document.addEventListener("alpine:init", () => {
 		Alpine.store("chapter", 1); // Initialize the store with the first chapter
 
@@ -12,12 +14,24 @@
 			}
 		};
 
-		const setChapterAccordingToHash = () => {
-			Alpine.store("chapter", getChapterFromUrl());
+		const setChapterAccordingToHash = async (pixelate) => {
+			const chapter = getChapterFromUrl();
+			if (!pixelate) {
+				Alpine.store("chapter", chapter);
+				return;
+			}
+			const pixelAnimation = new PixelAnimation({
+				color: "#1F0E1C",
+				blockSize: 4,
+			});
+			await pixelAnimation.createPixels(1000);
+			await pixelAnimation.sleep(100);
+			Alpine.store("chapter", chapter);
+			await pixelAnimation.removePixels(200);
 		};
 
 		// DEBUG
-		setChapterAccordingToHash();
+		setChapterAccordingToHash(false);
 
 		// PRODUCTION
 		// if (getChapterFromUrl() > 1) {
@@ -34,6 +48,8 @@
 		// }
 
 		// Listen for changes in the URL
-		window.addEventListener("hashchange", setChapterAccordingToHash);
+		window.addEventListener("hashchange", () =>
+			setChapterAccordingToHash(true)
+		);
 	});
 </script>
