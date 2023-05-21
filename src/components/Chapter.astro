@@ -25,15 +25,16 @@ const { chapter, question, title } = Astro.props;
 	/>
 	<div class='max-w-xl mx-auto gap-y-5 flex-col flex'>
 		<slot />
-		<OnlyWithJs>
-			{
-				question ? (
-					<Question to={chapter + 1} question={question} />
-				) : (
-					<Continue to={chapter + 1} />
-				)
-			}
-		</OnlyWithJs>
+		<div class='mt-8'>
+			<OnlyWithJs>
+				{
+					question ? (
+						<Question to={chapter + 1} question={question} />
+					) : (
+						<Continue to={chapter + 1} />
+					)
+				}
+			</OnlyWithJs>
+		</div>
 	</div>
-	<div class='max-w-xl mx-auto gap-y-5 flex-col flex'></div>
 </div>

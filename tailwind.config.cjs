@@ -8,9 +8,12 @@ module.exports = {
     colors: {
       'primary': '#1F0E1C',
       'secondary': '#F5EDBA',
-      'shade': '#8C8FAE',
+      'shade': '#D79B7D',
     },
     extend: {
+      fontSize: {
+        'lg': '1.25rem',
+      },
     },
   },
   plugins: [],
