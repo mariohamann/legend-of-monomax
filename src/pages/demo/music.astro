@@ -18,7 +18,7 @@
 					// Loop from 1 to 11 with buttons
 					Array.from({ length: 11 }, (_, i) => i + 1).map(
 						(chapter) => (
-							<button type='button' data-chapter={chapter}>
+							<button type='button' data-part={chapter}>
 								{chapter}
 							</button>
 						)
@@ -27,147 +27,52 @@
 			</div>
 
 			<script>
-				document
-					.querySelectorAll("button[data-chapter]")
-					.forEach((button) => {
-						button.addEventListener("click", (event) => {
-							const newChapter = parseInt(
-								event.target.dataset.chapter,
-								10
-							);
-							changeChapter(newChapter);
-						});
-					});
-				const audioContext = new (window.AudioContext ||
-					window.webkitAudioContext)();
+				import { AudioPlayer } from "../../js/AudioPlayer";
+				// An array containing the URLs for the loop and ending audios for each part
+				const audioData = [
+					{ loop: "/audio/1-loop.m4a", ending: null },
+					{
+						loop: "/audio/2-loop.m4a",
+						ending: "/audio/2-ending.m4a",
+					},
+					{
+						loop: "/audio/3-loop.m4a",
+						ending: "/audio/3-ending.m4a",
+					},
+					// Add more parts here...
+				];
 
-				async function loadAudio(url) {
-					const response = await fetch(url);
-					const arrayBuffer = await response.arrayBuffer();
-					const audioBuffer = await audioContext.decodeAudioData(
-						arrayBuffer
-					);
-					return audioBuffer;
-				}
+				// Create a new instance of the AudioPlayer class
+				const audioPlayer = new AudioPlayer(audioData);
 
-				function getAudioUrls(chapter) {
-					const basePath = "/audio/";
-					const loopUrl = `${basePath}${chapter}-loop.m4a`;
-					const endingUrl = `${basePath}${chapter}-ending.m4a`;
-					return { loopUrl, endingUrl };
-				}
-				const numberOfChapters = 11;
-				const audioBuffers = {};
+				// Load the audio buffers
+				audioPlayer.loadAudioBuffers().then(() => {
+					console.log("Audio buffers loaded.");
+				});
 
-				(async () => {
-					for (
-						let chapter = 1;
-						chapter <= numberOfChapters;
-						chapter++
-					) {
-						const { loopUrl, endingUrl } = getAudioUrls(chapter);
+				// Listen for 'audioEvent' on the window object and update the progress bar
+				window.addEventListener("audioEvent", (event) => {
+					const duration = event.detail.duration;
+					const progressBar =
+						document.getElementById("progress-bar")!;
 
-						// Chapter 11 only has an ending
-						if (chapter < numberOfChapters) {
-							audioBuffers[`${chapter}-loop`] = await loadAudio(
-								loopUrl
-							);
-						}
-
-						// Chapter 1 only has a loop
-						if (chapter > 1 && chapter < numberOfChapters) {
-							audioBuffers[`${chapter}-ending`] = await loadAudio(
-								endingUrl
-							);
-						}
-					}
-				})();
-
-				let currentChapter = null;
-				let currentSource = null;
-				let currentSourceStartTime = null;
-
-				function updateProgressBar(duration) {
-					const progressBar = document.getElementById("progress-bar");
 					progressBar.style.transitionDuration = `${duration}s`;
 					progressBar.style.width = "100%";
 					setTimeout(() => {
 						progressBar.style.width = "0%";
 						progressBar.style.transitionDuration = "0s";
 					}, duration * 1000);
-				}
+				});
 
-				function playAudioBuffer(buffer, loop, onEnded) {
-					const source = audioContext.createBufferSource();
-					source.buffer = buffer;
-					source.loop = loop;
-					source.connect(audioContext.destination);
-
-					if (onEnded) {
-						source.onended = onEnded;
-					}
-
-					source.start();
-					return source;
-				}
-
-				function changeChapter(newChapter) {
-					if (currentChapter === newChapter && currentSource) {
-						return;
-					}
-
-					if (currentSource) {
-						currentSource.loop = false;
-						currentSource.onended = null;
-					}
-
-					let nextAudio = audioBuffers[`${newChapter}-loop`];
-					let endingAudio =
-						currentChapter && currentChapter !== numberOfChapters
-							? audioBuffers[`${currentChapter}-ending`]
-							: null;
-
-					if (currentSource) {
-						currentSource.onended = () => {
-							if (endingAudio) {
-								const source = playAudioBuffer(
-									endingAudio,
-									false
-								);
-								source.onended = () => {
-									currentSource = playAudioBuffer(
-										nextAudio,
-										newChapter !== numberOfChapters
-									);
-								};
-							} else {
-								currentSource = playAudioBuffer(
-									nextAudio,
-									newChapter !== numberOfChapters
-								);
-							}
-						};
-					} else {
-						currentSource = playAudioBuffer(
-							nextAudio,
-							newChapter !== numberOfChapters
-						);
-					}
-
-					if (currentSource && newChapter !== 1) {
-						const elapsedTime =
-							audioContext.currentTime - currentSourceStartTime;
-						const loopTimeRemaining =
-							currentSource.buffer.duration -
-							(elapsedTime % currentSource.buffer.duration);
-						const progressBarDuration =
-							loopTimeRemaining +
-							(endingAudio ? endingAudio.duration : 0);
-						updateProgressBar(progressBarDuration);
-					}
-
-					currentChapter = newChapter;
-				}
+				// Button event listeners
+				document
+					.querySelectorAll("button[data-part]")
+					.forEach((button) => {
+						button.addEventListener("click", (event) => {
+							const newPart = event.target!.dataset.part;
+							audioPlayer.switchToNextAudio(newPart);
+						});
+					});
 			</script>
 
 			<div id='progress-bar-container'>
