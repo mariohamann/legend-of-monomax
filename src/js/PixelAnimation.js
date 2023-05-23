@@ -45,22 +45,22 @@ class PixelAnimation {
     this.el.removeChild(this.canvas);
   }
 
-  calculateIterationsAndSleepDuration(
+  calculateIterationsAndIterationDuration(
     totalBlocks,
     animationDuration
   ) {
     let iterations = 0;
     let remainingBlocks = totalBlocks;
-    let sleepDuration = 0;
+    let iterationDuration = 0;
 
     while (remainingBlocks > 0) {
       iterations++;
       remainingBlocks -= iterations;
     }
 
-    sleepDuration = animationDuration / iterations;
+    iterationDuration = animationDuration / iterations;
 
-    return { iterations, sleepDuration };
+    return { iterations, iterationDuration };
   }
 
   getDurations(duration) {
@@ -113,13 +113,14 @@ class PixelAnimation {
     this.totalBlocks = this.blocks.length;
     const {
       iterations: inIterations,
-      sleepDuration: inSleepDuration,
-    } = this.calculateIterationsAndSleepDuration(
+      iterationDuration: iterationDuration,
+    } = this.calculateIterationsAndIterationDuration(
       this.totalBlocks,
       inDuration
     );
     let blocksPerIteration = 1;
     let index = 0;
+    let startTime = performance.now();
 
     // Fill the canvas with pixel blocks (in-animation)
     for (let i = 0; i < inIterations; i++) {
@@ -137,7 +138,13 @@ class PixelAnimation {
         );
       }
       blocksPerIteration++;
-      await this.sleep(inSleepDuration);
+
+      // Here we check the elapsed time and pause if necessary
+      let elapsedTime = performance.now() - startTime;
+      let expectedElapsedTime = iterationDuration * i;
+      if (elapsedTime < expectedElapsedTime) {
+        await this.sleep(expectedElapsedTime - elapsedTime);
+      }
     }
   }
 
@@ -148,13 +155,14 @@ class PixelAnimation {
     this.blocks.sort(() => Math.random() - 0.5);
     const {
       iterations: outIterations,
-      sleepDuration: outSleepDuration,
-    } = this.calculateIterationsAndSleepDuration(
+      iterationDuration: iterationDuration,
+    } = this.calculateIterationsAndIterationDuration(
       this.totalBlocks,
       outDuration
     );
     let blocksPerIteration = 1;
     let index = 0;
+    let startTime = performance.now();
 
     for (let i = 0; i < outIterations; i++) {
       for (
@@ -170,7 +178,13 @@ class PixelAnimation {
         );
       }
       blocksPerIteration++;
-      await this.sleep(outSleepDuration);
+
+      // Here we check the elapsed time and pause if necessary
+      let elapsedTime = performance.now() - startTime;
+      let expectedElapsedTime = iterationDuration * i;
+      if (elapsedTime < expectedElapsedTime) {
+        await this.sleep(expectedElapsedTime - elapsedTime);
+      }
     }
 
     // Hide the canvas and enable scrolling
@@ -182,12 +196,10 @@ class PixelAnimation {
 
   async animatePixels(customDuration) {
     const customDurations = this.getDurations(customDuration || this.duration);
-    const inDuration = customDurations.in;
-    const pauseDuration = customDurations.pause;
-    const outDuration = customDurations.out;
+    const { in: inDuration, pause, out: outDuration } = customDurations;
 
     await this.createPixels(inDuration);
-    await this.sleep(pauseDuration);
+    await this.sleep(pause);
     await this.removePixels(outDuration);
   }
 

@@ -1,5 +1,47 @@
 <script>
 	import PixelAnimation from "../js/PixelAnimation.js";
+	import { AudioPlayer } from "../js/AudioPlayer";
+	// An array containing the URLs for the loop and ending audios for each part
+	const audioData = [
+		{ loop: "/audio/1-loop.m4a", ending: null },
+		{
+			loop: "/audio/2-loop.m4a",
+			ending: "/audio/2-ending.m4a",
+		},
+		{
+			loop: "/audio/3-loop.m4a",
+			ending: "/audio/3-ending.m4a",
+		},
+		{
+			loop: "/audio/4-loop.m4a",
+			ending: "/audio/4-ending.m4a",
+		},
+		{
+			loop: "/audio/5-loop.m4a",
+			ending: "/audio/5-ending.m4a",
+		},
+		,
+		{
+			loop: "/audio/6-loop.m4a",
+			ending: "/audio/6-ending.m4a",
+		},
+	];
+
+	// Create a new instance of the AudioPlayer class
+	const audioPlayer = new AudioPlayer(audioData);
+
+	// Load the audio buffers
+	audioPlayer.loadAudioBuffers().then(() => {
+		console.log("Audio buffers loaded.");
+	});
+
+	// Button event listeners
+	document.querySelectorAll("button[data-part]").forEach((button) => {
+		button.addEventListener("click", (event) => {
+			const newPart = event.target!.dataset.part;
+			audioPlayer.switchToNextAudio(newPart);
+		});
+	});
 
 	document.addEventListener("alpine:init", () => {
 		Alpine.store("chapter", 1); // Initialize the store with the first chapter
@@ -20,15 +62,23 @@
 				Alpine.store("chapter", chapter);
 				return;
 			}
+			audioPlayer.switchToNextAudio(chapter - 1);
+		};
+
+		// Listen for 'audioEvent' on the window object and update the progress bar
+		window.addEventListener("audioEvent", async (event) => {
+			const duration = event.detail.duration;
+			const progressBar = document.getElementById("progress-bar")!;
+
 			const pixelAnimation = new PixelAnimation({
 				color: "#1F0E1C",
 				blockSize: 4,
 			});
-			await pixelAnimation.createPixels(1000);
+			await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
 			await pixelAnimation.sleep(100);
-			Alpine.store("chapter", chapter);
-			await pixelAnimation.removePixels(200);
-		};
+			Alpine.store("chapter", Alpine.store("chapter") + 1);
+			await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
+		});
 
 		// DEBUG
 		setChapterAccordingToHash(false);
