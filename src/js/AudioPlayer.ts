@@ -43,11 +43,14 @@ export class AudioPlayer {
     }
   }
 
-  private async loadAudio(url: string) {
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-    return audioBuffer;
+  private loadAudio(url: string): Promise<AudioBuffer> {
+    return fetch(url)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => {
+        return new Promise((resolve, reject) => {
+          this.audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+        });
+      });
   }
 
   private playAudioBuffer(buffer: AudioBuffer, loop: boolean) {

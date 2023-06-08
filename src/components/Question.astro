@@ -16,6 +16,7 @@ const { to, question } = Astro.props;
     {
       question.answers.map((answer, index) => (
         <a
+          id=`answer-${to-1}-${index}`
           href=`#chapter-${to}`
           class='flex w-full text-left group leading-snug outline-none'
         >

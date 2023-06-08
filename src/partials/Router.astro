@@ -53,6 +53,18 @@
     console.log("Audio buffers loaded.");
   });
 
+  document
+    .getElementById("answer-0-0")
+    .addEventListener("click", async (event) => {
+      // Prevent the default action (navigation) from taking place
+      event.preventDefault();
+
+      audioPlayer.switchToNextAudio(0);
+
+      // Update the location hash to reflect the current chapter
+      window.location.hash = "#chapter-1";
+    });
+
   // Button event listeners
   // document.querySelectorAll("button[data-part]").forEach((button) => {
   //   button.addEventListener("click", (event) => {
