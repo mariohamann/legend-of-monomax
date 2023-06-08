@@ -61,10 +61,10 @@
 
       Alpine.store("audio", true); // Initialize the store with the first chapter
 
-      audioPlayer.switchToNextAudio(0);
-
       // Update the location hash to reflect the current chapter
       window.location.hash = "#chapter-1";
+
+      audioPlayer.switchToNextAudio(0);
     });
 
   document.addEventListener("alpine:init", () => {
@@ -82,8 +82,19 @@
 
     const setChapterAccordingToHash = async (pixelate) => {
       const chapter = getChapterFromUrl();
+      if (chapter > 0) {
+        const navigation = document.getElementById(`navigation`)!;
+        navigation.style.opacity = "20%";
+      }
       if (!pixelate) {
         Alpine.store("chapter", chapter);
+        // loop through every element with navigation-${number smaller as chapter} and set width to 100%
+        for (let i = 1; i < chapter + 1; i++) {
+          console.log(`navigation-${i}`);
+          const navigationElement = document.getElementById(`navigation-${i}`)!;
+          navigationElement.style.transitionDuration = "0s";
+          navigationElement.style.width = "100%";
+        }
         return;
       }
       if (Alpine.store("audio") === true) {
@@ -102,6 +113,11 @@
     const makeTransition = async (duration: number) => {
       const overlay = document.getElementById(`overlay`)!;
 
+      const navigation = document.getElementById(`navigation`)!;
+      const navigationElement = document.getElementById(
+        `navigation-${getChapterFromUrl()}`
+      )!;
+
       const durationInSeconds = `${duration * 0.5 - 50 / 1000}s`;
       overlay.style.transitionDuration = durationInSeconds;
       overlay.style.opacity = "0%";
@@ -110,7 +126,10 @@
         color: "#1F0E1C",
         blockSize: 4,
       });
+      navigation.style.opacity = "100%";
       overlay.style.opacity = "100%";
+      navigationElement.style.transitionDuration = `${duration}s`;
+      navigationElement.style.width = "100%";
       await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
       await pixelAnimation.sleep(100);
       window.scrollTo({
@@ -119,6 +138,7 @@
       Alpine.store("chapter", getChapterFromUrl());
       overlay.style.opacity = "0%";
       await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
+      navigation.style.opacity = "20%";
     };
 
     // DEBUG

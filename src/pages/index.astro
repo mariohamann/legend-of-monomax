@@ -54,7 +54,20 @@ import Background from "../components/Background.astro";
             "No, I prefer to quest in quiet.",
           ],
         }}
-      />
+      >
+        <p>
+          Welcome to the digital realm of CMS superheroes! Join an adventure
+          where MonoMax, a modern but monolithic CMS like e.g. <a
+            class='underline underline-offset-2'
+            href='https://statamic.com'>Statamic</a
+          >, faces the challenge of a new era. You'll guide MonoMax through a
+          journey of transformation as we explore the tug of war between
+          traditional CMS powers and the rise of Headless Heroes.
+        </p><p>
+          It's more than a tech tale; it's a quest about adaptability and the
+          evolution of digital content management. Gear up for an epic ride!
+        </p>
+      </Chapter>
       <Chapter title='I. The Power Paradox' chapter={1}>
         <p>
           In a vibrant pixelated city, MonoMax soars through the sky, his cape
@@ -282,6 +295,28 @@ import Background from "../components/Background.astro";
       class='relative z-0 ease-linear transition-opacity opacity-0 pointer-events-none'
     >
       <Background />
+    </div>
+    <div
+    id="navigation" 
+      class='fixed top-0 left-0 w-full h-1 opacity-0 transition-all duration-150'
+    >
+        <div
+          class='bg-secondary opacity-50 absolute w-full h-full'
+        >
+        </div>
+        {
+          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((chapter) => (
+            <div
+              class='absolute h-full'
+              style={{ left: `${(chapter * 100) / 11}%; width: ${100 / 11}%` }}
+            >
+              <div
+                id=`navigation-${chapter + 1}`
+                class='bg-secondary w-0 absolute left-0 h-full top-0 transition-all ease-linear'
+              />
+            </div>
+          ))
+        }
     </div>
   </body>
 </html>
