@@ -116,7 +116,7 @@
       window.scrollTo({
         top: 0,
       });
-      Alpine.store("chapter", Alpine.store("chapter") + 1);
+      Alpine.store("chapter", getChapterFromUrl());
       overlay.style.opacity = "0%";
       await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
     };
@@ -133,8 +133,8 @@
     // 	) {
     // 		setChapterAccordingToHash(); // Set the chapter according to the hash on page load
     // 	} else {
-    // 		location.hash = "#chapter-1";
-    // 		Alpine.store("chapter", 1);
+    // 		location.hash = "";
+    // 		Alpine.store("chapter", 0);
     // 	}
     // }
 
@@ -142,5 +142,24 @@
     window.addEventListener("hashchange", () =>
       setChapterAccordingToHash(true)
     );
+
+    const mainTitle = document.querySelector("h1")?.textContent;
+
+    Alpine.effect(() => {
+      const chapter = Alpine.store("chapter");
+      const chapterTitle = document.querySelector(
+        `#chapter-${chapter} h2, #chapter-${chapter} p`
+      )?.textContent;
+
+      // set the document title to the chapter title
+      document.title = `${mainTitle} – ${chapterTitle}`;
+
+      // set history state to set current title
+      history.replaceState(
+        { title: document.title },
+        document.title,
+        location.href
+      );
+    });
   });
 </script>
