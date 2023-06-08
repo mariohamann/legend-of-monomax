@@ -82,11 +82,11 @@
 
     const setChapterAccordingToHash = async (pixelate) => {
       const chapter = getChapterFromUrl();
-      if (chapter > 0) {
-        const navigation = document.getElementById(`navigation`)!;
-        navigation.style.opacity = "20%";
-      }
       if (!pixelate) {
+        if (chapter > 0) {
+          const navigation = document.getElementById(`navigation`)!;
+          navigation.style.opacity = "20%";
+        }
         Alpine.store("chapter", chapter);
         // loop through every element with navigation-${number smaller as chapter} and set width to 100%
         for (let i = 1; i < chapter + 1; i++) {
@@ -107,6 +107,10 @@
     // Listen for 'audioEvent' on the window object and update the progress bar
     window.addEventListener("audioEvent", async (event) => {
       const duration = event.detail.duration;
+      if (getChapterFromUrl() < 2) {
+        makeTransition(2);
+        return;
+      }
       makeTransition(duration);
     });
 
