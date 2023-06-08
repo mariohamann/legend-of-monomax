@@ -1,6 +1,7 @@
 ---
 import Router from "../partials/Router.astro";
 import Chapter from "../components/Chapter.astro";
+import Background from "../components/Background.astro";
 ---
 
 <!DOCTYPE html>
@@ -25,10 +26,6 @@ import Chapter from "../components/Chapter.astro";
           /* Chrome 36+, Opera 23+, Firefox 39+ */
             url("/fonts/vt323-v17-latin-regular.woff") format("woff"); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
       }
-      .background {
-        background: url("./images/bg.jpeg");
-        filter: hue-rotate(-20deg) brightness(0.9);
-      }
       .mix-blend-screen {
         transform: translate3d(0, 0, 0);
         -webkit-backface-visibility: hidden;
@@ -36,15 +33,15 @@ import Chapter from "../components/Chapter.astro";
       }
 
       canvas {
-        @apply mix-blend-screen;
+        @apply mix-blend-plus-lighter;
       }
     </style>
   </head>
-  <body x-data class='font-code text-lg text-secondary bg-primary min-h-screen'>
-    <div
-      class='background fixed top-0 left-0 bg-cover w-screen h-screen bg-center opacity-80 -z-10'
-    >
-    </div><div
+  <body
+    x-data
+    class='font-code text-lg text-secondary bg-primary min-h-screen text-opacity-90'
+  >
+    <Background /><div
       class='px-8 py-12 flex flex-col gap-32 min-h-screen justify-center'
     >
       <Chapter
@@ -280,6 +277,11 @@ import Chapter from "../components/Chapter.astro";
         <p>– The End.</p>
       </Chapter>
       <Router />
+    </div><div
+      id='overlay'
+      class='relative z-0 ease-linear transition-opacity opacity-0 pointer-events-none'
+    >
+      <Background />
     </div>
   </body>
 </html>

@@ -7,8 +7,8 @@ type AudioBuffers = {
 };
 
 type AudioData = {
-  loop: string;
-  ending: string | null;
+  loop?: string;
+  ending?: string;
 };
 
 export class AudioPlayer {
@@ -30,8 +30,11 @@ export class AudioPlayer {
     for (const part in this.audioData) {
       const loop = this.audioData[part].loop;
       const ending = this.audioData[part].ending;
-
-      this.audioBuffers[`${part}-loop`] = await this.loadAudio(loop);
+      if (loop) {
+        this.audioBuffers[`${part}-loop`] = await this.loadAudio(loop);
+      } else {
+        this.audioBuffers[`${part}-loop`] = null;
+      }
       if (ending) {
         this.audioBuffers[`${part}-ending`] = await this.loadAudio(ending);
       } else {
@@ -48,6 +51,7 @@ export class AudioPlayer {
   }
 
   private playAudioBuffer(buffer: AudioBuffer, loop: boolean) {
+    console.log("playAudioBuffer", buffer, loop);
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
     source.loop = loop;

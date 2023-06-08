@@ -3,7 +3,7 @@
   import { AudioPlayer } from "../js/AudioPlayer";
   // An array containing the URLs for the loop and ending audios for each part
   const audioData = [
-    { loop: "/audio/1-loop.m4a", ending: null },
+    { loop: "/audio/1-loop.m4a" },
     {
       loop: "/audio/2-loop.m4a",
       ending: "/audio/2-ending.m4a",
@@ -20,10 +20,28 @@
       loop: "/audio/5-loop.m4a",
       ending: "/audio/5-ending.m4a",
     },
-    ,
     {
       loop: "/audio/6-loop.m4a",
       ending: "/audio/6-ending.m4a",
+    },
+    {
+      loop: "/audio/7-loop.m4a",
+      ending: "/audio/7-ending.m4a",
+    },
+    {
+      loop: "/audio/8-loop.m4a",
+      ending: "/audio/8-ending.m4a",
+    },
+    {
+      loop: "/audio/9-loop.m4a",
+      ending: "/audio/9-ending.m4a",
+    },
+    {
+      loop: "/audio/10-loop.m4a",
+      ending: "/audio/10-ending.m4a",
+    },
+    {
+      ending: "/audio/11-ending.m4a",
     },
   ];
 
@@ -36,12 +54,12 @@
   });
 
   // Button event listeners
-  document.querySelectorAll("button[data-part]").forEach((button) => {
-    button.addEventListener("click", (event) => {
-      const newPart = event.target!.dataset.part;
-      audioPlayer.switchToNextAudio(newPart);
-    });
-  });
+  // document.querySelectorAll("button[data-part]").forEach((button) => {
+  //   button.addEventListener("click", (event) => {
+  //     const newPart = event.target!.dataset.part;
+  //     audioPlayer.switchToNextAudio(newPart);
+  //   });
+  // });
 
   document.addEventListener("alpine:init", () => {
     Alpine.store("chapter", 0); // Initialize the store with the first chapter
@@ -75,33 +93,28 @@
         `chapter-${Alpine.store("chapter") + 1}`
       )!;
 
-      nextChapterElement.style.opacity = "0%";
-      nextChapterElement.style.transitionDuration = `${
-        duration * 0.5 - 50 / 1000
-      }s`;
+      const overlay = document.getElementById(`overlay`)!;
+
+      const durationInSeconds = `${duration * 0.5 - 50 / 1000}s`;
+
+      overlay.style.transitionDuration = durationInSeconds;
+      overlay.style.opacity = "0%";
+      // overlay.style.visibility = "visible";
 
       const pixelAnimation = new PixelAnimation({
         color: "#1F0E1C",
         blockSize: 4,
       });
-      currentChapterElement.style.opacity = "100%";
-      currentChapterElement.style.transitionDuration = `${
-        duration * 0.5 - 50 / 1000
-      }s`;
-      currentChapterElement.style.opacity = "0%";
-      // setTimeout(() => {
-      // 	currentChapterElement.style.opacity = "100%";
-      // 	currentChapterElement.style.transitionDuration = "0s";
-      // }, duration * 0.5 - 50 / 1000);
+      overlay.style.opacity = "100%";
       await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
       await pixelAnimation.sleep(100);
-      console.log(nextChapterElement.style.opacity);
+      window.scrollTo({
+        top: 0,
+      });
       Alpine.store("chapter", Alpine.store("chapter") + 1);
-      console.log(nextChapterElement.style.opacity);
-      console.log(nextChapterElement.style.transitionDuration);
-      // nextChapterElement.style.opacity = "100%";
-      console.log(nextChapterElement.style.opacity);
+      overlay.style.opacity = "0%";
       await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
+      // overlay.style.visibility = "hidden";
     });
 
     // DEBUG
