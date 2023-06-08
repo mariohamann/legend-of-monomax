@@ -15,7 +15,11 @@ export interface Props {
 const { chapter, question, title } = Astro.props;
 ---
 
-<div x-show=`$store.chapter===${chapter}`>
+<div
+	id=`chapter-${chapter}`
+	class='mix-blend-screen relative top-0 left-0'
+	:class=`$store.chapter===${chapter} || 'hidden opacity-0'`
+>
 	<h1 class='max-w-xl mx-auto text-4xl'>
 		{title}
 	</h1>

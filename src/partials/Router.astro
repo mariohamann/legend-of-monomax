@@ -68,15 +68,39 @@
 		// Listen for 'audioEvent' on the window object and update the progress bar
 		window.addEventListener("audioEvent", async (event) => {
 			const duration = event.detail.duration;
-			const progressBar = document.getElementById("progress-bar")!;
+			const currentChapterElement = document.getElementById(
+				`chapter-${Alpine.store("chapter")}`
+			)!;
+			const nextChapterElement = document.getElementById(
+				`chapter-${Alpine.store("chapter") + 1}`
+			)!;
+
+			nextChapterElement.style.opacity = "0%";
+			nextChapterElement.style.transitionDuration = `${
+				duration * 0.5 - 50 / 1000
+			}s`;
 
 			const pixelAnimation = new PixelAnimation({
 				color: "#1F0E1C",
 				blockSize: 4,
 			});
+			currentChapterElement.style.opacity = "100%";
+			currentChapterElement.style.transitionDuration = `${
+				duration * 0.5 - 50 / 1000
+			}s`;
+			currentChapterElement.style.opacity = "0%";
+			// setTimeout(() => {
+			// 	currentChapterElement.style.opacity = "100%";
+			// 	currentChapterElement.style.transitionDuration = "0s";
+			// }, duration * 0.5 - 50 / 1000);
 			await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
 			await pixelAnimation.sleep(100);
+			console.log(nextChapterElement.style.opacity);
 			Alpine.store("chapter", Alpine.store("chapter") + 1);
+			console.log(nextChapterElement.style.opacity);
+			console.log(nextChapterElement.style.transitionDuration);
+			// nextChapterElement.style.opacity = "100%";
+			console.log(nextChapterElement.style.opacity);
 			await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
 		});
 

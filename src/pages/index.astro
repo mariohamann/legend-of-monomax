@@ -25,101 +25,119 @@ import Chapter from "../components/Chapter.astro";
 						url("/fonts/vt323-v17-latin-regular.woff")
 						format("woff"); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 			}
+			.background {
+				background: url("./images/bg.jpeg");
+			}
+			.mix-blend-screen {
+				transform: translate3d(0, 0, 0);
+				-webkit-backface-visibility: hidden;
+				-webkit-perspective: 1000;
+			}
+
+			canvas {
+				@apply mix-blend-screen;
+			}
 		</style>
 	</head>
-	<body
-		x-data
-		class='font-code text-lg bg-primary text-secondary px-8 py-12 flex flex-col gap-32'
-	>
-		<Chapter title='I. The Power Paradox' chapter={1}>
-			<p>
-				In a vibrant pixelated city, MonoMax soars through the sky, his
-				cape billowing behind him. He is the all-powerful superhero who
-				can handle any web content challenge with his wide array of
-				monolithic CMS abilities.
-			</p>
-			<p>
-				Lately, however, whispers of the new generation of superheroes,
-				the HeadlessHeroes, have reached his ears. They speak of
-				increased flexibility and adaptability, leaving MonoMax feeling
-				overwhelmed by the sheer weight of his powers.
-			</p>
-		</Chapter>
-		<Chapter
-			title='II. The Ability Abyss'
-			chapter={2}
-			question={{
-				text: "Why should MonoMax drop his form handling powers?",
-				answers: [
-					"Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
-					"Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
-					"Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
-				],
-			}}
+	<body x-data class='font-code text-lg text-secondary bg-primary'>
+		<div
+			class='background fixed top-0 left-0 bg-cover w-screen h-screen bg-center opacity-80 -z-10'
 		>
-			<p>
-				In a vibrant pixelated city, MonoMax soars through the sky, his
-				cape billowing behind her. He is the all-powerful superhero who
-				can handle any web content challenge with his wide array of
-				monolithic CMS abilities.
-			</p>
-			<p>
-				Lately, however, whispers of the new generation of superheroes,
-				the HeadlessHeroes, have reached his ears. They speak of
-				increased flexibility and adaptability, leaving MonoMax feeling
-				overwhelmed by the sheer weight of his powers.
-			</p>
-		</Chapter>
-		<Chapter
-			title='III. The Ability Abyss'
-			chapter={3}
-			question={{
-				text: "Why should MonoMax drop his form handling powers?",
-				answers: [
-					"Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
-					"Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
-					"Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
-				],
-			}}
-		>
-			<p>
-				In a vibrant pixelated city, MonoMax soars through the sky, his
-				cape billowing behind her. He is the all-powerful superhero who
-				can handle any web content challenge with his wide array of
-				monolithic CMS abilities.
-			</p>
-			<p>
-				Lately, however, whispers of the new generation of superheroes,
-				the HeadlessHeroes, have reached his ears. They speak of
-				increased flexibility and adaptability, leaving MonoMax feeling
-				overwhelmed by the sheer weight of his powers.
-			</p>
-		</Chapter>
-		<Chapter
-			title='IV. The Ability Abyss'
-			chapter={4}
-			question={{
-				text: "Why should MonoMax drop his form handling powers?",
-				answers: [
-					"Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
-					"Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
-					"Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
-				],
-			}}
-		>
-			<p>
-				In a vibrant pixelated city, MonoMax soars through the sky, his
-				cape billowing behind her. He is the all-powerful superhero who
-				can handle any web content challenge with his wide array of
-				monolithic CMS abilities.
-			</p>
-			<p>
-				Lately, however, whispers of the new generation of superheroes,
-				the HeadlessHeroes, have reached his ears. They speak of
-				increased flexibility and adaptability, leaving MonoMax feeling
-				overwhelmed by the sheer weight of his powers.
-			</p>
-		</Chapter>
-		<Router />
+		</div><div class='px-8 py-12 flex flex-col gap-32'>
+			<Chapter title='I. The Power Paradox' chapter={1}>
+				<p>
+					In a vibrant pixelated city, MonoMax soars through the sky,
+					his cape billowing behind him. He is the all-powerful
+					superhero who can handle any web content challenge with his
+					wide array of monolithic CMS abilities.
+				</p>
+				<p>
+					Lately, however, whispers of the new generation of
+					superheroes, the HeadlessHeroes, have reached his ears. They
+					speak of increased flexibility and adaptability, leaving
+					MonoMax feeling overwhelmed by the sheer weight of his
+					powers.
+				</p>
+			</Chapter>
+			<Chapter
+				title='II. The Ability Abyss'
+				chapter={2}
+				question={{
+					text: "Why should MonoMax drop his form handling powers?",
+					answers: [
+						"Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
+						"Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
+						"Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
+					],
+				}}
+			>
+				<p>
+					In a vibrant pixelated city, MonoMax soars through the sky,
+					his cape billowing behind her. He is the all-powerful
+					superhero who can handle any web content challenge with his
+					wide array of monolithic CMS abilities.
+				</p>
+				<p>
+					Lately, however, whispers of the new generation of
+					superheroes, the HeadlessHeroes, have reached his ears. They
+					speak of increased flexibility and adaptability, leaving
+					MonoMax feeling overwhelmed by the sheer weight of his
+					powers.
+				</p>
+			</Chapter>
+			<Chapter
+				title='III. The Ability Abyss'
+				chapter={3}
+				question={{
+					text: "Why should MonoMax drop his form handling powers?",
+					answers: [
+						"Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
+						"Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
+						"Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
+					],
+				}}
+			>
+				<p>
+					In a vibrant pixelated city, MonoMax soars through the sky,
+					his cape billowing behind her. He is the all-powerful
+					superhero who can handle any web content challenge with his
+					wide array of monolithic CMS abilities.
+				</p>
+				<p>
+					Lately, however, whispers of the new generation of
+					superheroes, the HeadlessHeroes, have reached his ears. They
+					speak of increased flexibility and adaptability, leaving
+					MonoMax feeling overwhelmed by the sheer weight of his
+					powers.
+				</p>
+			</Chapter>
+			<Chapter
+				title='IV. The Ability Abyss'
+				chapter={4}
+				question={{
+					text: "Why should MonoMax drop his form handling powers?",
+					answers: [
+						"Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
+						"Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
+						"Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
+					],
+				}}
+			>
+				<p>
+					In a vibrant pixelated city, MonoMax soars through the sky,
+					his cape billowing behind her. He is the all-powerful
+					superhero who can handle any web content challenge with his
+					wide array of monolithic CMS abilities.
+				</p>
+				<p>
+					Lately, however, whispers of the new generation of
+					superheroes, the HeadlessHeroes, have reached his ears. They
+					speak of increased flexibility and adaptability, leaving
+					MonoMax feeling overwhelmed by the sheer weight of his
+					powers.
+				</p>
+			</Chapter>
+			<Router />
+		</div>
 	</body>
 </html>
