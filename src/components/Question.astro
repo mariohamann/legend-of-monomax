@@ -3,7 +3,7 @@ export interface Props {
 	to: number;
 	question: {
 		text: string;
-		answers: string[];
+		answers: string[] | { text: string; href: number }[];
 	};
 }
 
@@ -17,11 +17,11 @@ const { to, question } = Astro.props;
       question.answers.map((answer, index) => (
         <a
           id=`answer-${to-1}-${index}`
-          href=`#chapter-${to}`
+          href={answer.href || `#chapter-${to}`}
           class='flex w-full text-left group leading-snug outline-none'
         >
-          <span class="group-focus:text-primary group-hover:text-primary text-shade w-6 inline-block transition-colors duration-300" >&gt;</span>
-          <span class="underline decoration-2 decoration-[transparent] group-focus:decoration-primary group-hover:decoration-primary transition-colors duration-300">{answer}</span>
+          <span class="group-focus:text-primary shrink-0 group-hover:text-primary text-shade w-6 inline-block transition-colors duration-300" >&gt;</span>
+          <span class="underline decoration-2 decoration-[transparent] group-focus:decoration-primary group-hover:decoration-primary transition-colors duration-300">{answer.text || answer}</span>
         </a>
       ))
     }

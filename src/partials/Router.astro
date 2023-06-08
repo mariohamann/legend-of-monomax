@@ -127,9 +127,10 @@
       overlay.style.opacity = "0%";
 
       const pixelAnimation = new PixelAnimation({
-        color: "#1F0E1C",
+        color: "#1A0C1A",
         blockSize: 4,
       });
+      navigation.style.transitionDuration = durationInSeconds;
       navigation.style.opacity = "100%";
       overlay.style.opacity = "100%";
       navigationElement.style.transitionDuration = `${duration}s`;
@@ -141,8 +142,8 @@
       });
       Alpine.store("chapter", getChapterFromUrl());
       overlay.style.opacity = "0%";
-      await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
       navigation.style.opacity = "20%";
+      await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
     };
 
     // DEBUG

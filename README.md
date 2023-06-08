@@ -1,47 +1,25 @@
-# Astro Starter Kit: Minimal
+# The Legend of MonoMax
 
-```
-npm create astro@latest -- --template minimal
-```
+Welcome to the repository of 'The Legend of MonoMax'. This project is a narrative-driven, interactive web experience that explores monolithic content management systems like Statamic.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## Content
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+'The Legend of MonoMax' is a story of transformation, where the protagonist - MonoMax, a representation of a traditional monolithic CMS - goes through a process of change to become ModuMax. The story seeks to delve into the pros and cons of both traditional and headless CMS, encouraging users to ponder upon the potential and the adaptability of CMS technology.
 
-## 🚀 Project Structure
+## Background
 
-Inside of your Astro project, you'll see the following folders and files:
+This project has been created using various tools and resources:
 
-```
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+1. **Music**: The background score is handmade and produced by the author with Ableton Live heavily using this [8bit Live Pack](https://brianfunk.gumroad.com/l/8bit). The swing parts (chapters 7 + 8) were co-composed by Andreas Bohl. The music is not licensed under MIT, all rights are reserved.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+2. **Images**: The visuals for the experience were created using MidJourney and were further optimized using various tools, especially [PixelIt](https://giventofly.github.io/pixelit/).
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+3. **Website**: As I'm the only one working on this project, I decided to use (ironically not use a CMS but) [Astro](https://astro.build) to create a simple, static website. (Statamic can create static websites, too!)
 
-Any static assets, like images, can be placed in the `public/` directory.
+4. **Text and Code**: All the text and code for this project were co-authored by the project's creator and A.I.
 
-## 🧞 Commands
+Please note that everything in this repository is licensed under the MIT License, with the exception of the music.
 
-All commands are run from the root of the project, from a terminal:
+## License
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:3000`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Except where otherwise noted, the content of this repository is licensed under the [MIT License](LICENSE).

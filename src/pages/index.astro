@@ -9,6 +9,7 @@ import Background from "../components/Background.astro";
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='icon' href='/favicon.ico' />
     <title>Pixel Animation</title>
 
     <style is:global>
@@ -276,7 +277,16 @@ import Background from "../components/Background.astro";
           balance between the strengths of monolithic and headless CMSs.
         </p>
       </Chapter>
-      <Chapter title='XI: The Marvelous ModuMax' chapter={11}>
+      <Chapter title='XI: The Marvelous ModuMax' chapter={11} 
+        question={{
+text: "You've made it! ❤️ I hope you found this journey as exciting to undertake as it was for me to create! If you're curious to delve deeper, check out these pathways:",
+        answers: [
+        {text: "github.com | Dive into the heart of the adventure! Explore the 'Legend of MonoMax' on GitHub.", href: "https://github.com/mariohamann/legend-of-monomax"},
+        {text: "mariohamann.de | Who's behind this digital tale? Visit my personal website to find out more!", href: "https://mariohamann.de/"},
+        {text: "statamic.com | Meet Statamic, my go-to CMS after years of WordPress exploration. A true Modulith!", href: "https://www.statamic.com/"},
+        {text: "getkirby.com | Curious about Kirby? It's widely appreciated in my circle, and their docs are nice.", href: "https://getkirby.com/"},
+        ],
+}}>
         <p>
           And so, ModuMax continues her journey, protecting the city with her
           newfound strength and flexibility, always ready to build
