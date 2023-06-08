@@ -51,7 +51,6 @@ export class AudioPlayer {
   }
 
   private playAudioBuffer(buffer: AudioBuffer, loop: boolean) {
-    console.log("playAudioBuffer", buffer, loop);
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
     source.loop = loop;
@@ -70,7 +69,8 @@ export class AudioPlayer {
       this.currentSource.onended = null;
     }
 
-    let nextAudio = this.audioBuffers[`${newPart}-loop`];
+    let nextLoopAudio = this.audioBuffers[`${newPart}-loop`];
+    let nextEndingAudio = this.audioBuffers[`${newPart}-ending`];
     let endingAudio =
       this.currentPart && this.currentPart !== newPart
         ? this.audioBuffers[`${this.currentPart}-ending`]
@@ -81,14 +81,41 @@ export class AudioPlayer {
         if (endingAudio) {
           const source = this.playAudioBuffer(endingAudio, false);
           source.onended = () => {
-            this.currentSource = this.playAudioBuffer(nextAudio!, true);
+            if (nextLoopAudio) {
+              this.currentSource = this.playAudioBuffer(nextLoopAudio, true);
+            } else if (nextEndingAudio) {
+              this.currentSource = this.playAudioBuffer(nextEndingAudio, false);
+              this.currentSource.onended = () => {
+                this.currentSource = null;
+              };
+            } else {
+              this.currentSource = null;
+            }
           };
         } else {
-          this.currentSource = this.playAudioBuffer(nextAudio!, true);
+          if (nextLoopAudio) {
+            this.currentSource = this.playAudioBuffer(nextLoopAudio, true);
+          } else if (nextEndingAudio) {
+            this.currentSource = this.playAudioBuffer(nextEndingAudio, false);
+            this.currentSource.onended = () => {
+              this.currentSource = null;
+            };
+          } else {
+            this.currentSource = null;
+          }
         }
       };
     } else {
-      this.currentSource = this.playAudioBuffer(nextAudio!, true);
+      if (nextLoopAudio) {
+        this.currentSource = this.playAudioBuffer(nextLoopAudio, true);
+      } else if (nextEndingAudio) {
+        this.currentSource = this.playAudioBuffer(nextEndingAudio, false);
+        this.currentSource.onended = () => {
+          this.currentSource = null;
+        };
+      } else {
+        this.currentSource = null;
+      }
     }
 
     if (this.currentSource && newPart !== "1") {
@@ -104,6 +131,8 @@ export class AudioPlayer {
 
     this.currentPart = newPart;
   }
+
+
 
   private emitAudioEvent(event: AudioEvent) {
     const audioEvent = new CustomEvent("audioEvent", {

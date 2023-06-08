@@ -99,7 +99,6 @@
 
       overlay.style.transitionDuration = durationInSeconds;
       overlay.style.opacity = "0%";
-      // overlay.style.visibility = "visible";
 
       const pixelAnimation = new PixelAnimation({
         color: "#1F0E1C",
@@ -114,7 +113,6 @@
       Alpine.store("chapter", Alpine.store("chapter") + 1);
       overlay.style.opacity = "0%";
       await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
-      // overlay.style.visibility = "hidden";
     });
 
     // DEBUG
