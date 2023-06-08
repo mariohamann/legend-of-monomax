@@ -59,19 +59,13 @@
       // Prevent the default action (navigation) from taking place
       event.preventDefault();
 
+      Alpine.store("audio", true); // Initialize the store with the first chapter
+
       audioPlayer.switchToNextAudio(0);
 
       // Update the location hash to reflect the current chapter
       window.location.hash = "#chapter-1";
     });
-
-  // Button event listeners
-  // document.querySelectorAll("button[data-part]").forEach((button) => {
-  //   button.addEventListener("click", (event) => {
-  //     const newPart = event.target!.dataset.part;
-  //     audioPlayer.switchToNextAudio(newPart);
-  //   });
-  // });
 
   document.addEventListener("alpine:init", () => {
     Alpine.store("chapter", 0); // Initialize the store with the first chapter
@@ -92,23 +86,23 @@
         Alpine.store("chapter", chapter);
         return;
       }
-      audioPlayer.switchToNextAudio(chapter - 1);
+      if (Alpine.store("audio") === true) {
+        audioPlayer.switchToNextAudio(chapter - 1);
+      } else {
+        makeTransition(2);
+      }
     };
 
     // Listen for 'audioEvent' on the window object and update the progress bar
     window.addEventListener("audioEvent", async (event) => {
       const duration = event.detail.duration;
-      const currentChapterElement = document.getElementById(
-        `chapter-${Alpine.store("chapter")}`
-      )!;
-      const nextChapterElement = document.getElementById(
-        `chapter-${Alpine.store("chapter") + 1}`
-      )!;
+      makeTransition(duration);
+    });
 
+    const makeTransition = async (duration: number) => {
       const overlay = document.getElementById(`overlay`)!;
 
       const durationInSeconds = `${duration * 0.5 - 50 / 1000}s`;
-
       overlay.style.transitionDuration = durationInSeconds;
       overlay.style.opacity = "0%";
 
@@ -125,7 +119,7 @@
       Alpine.store("chapter", Alpine.store("chapter") + 1);
       overlay.style.opacity = "0%";
       await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
-    });
+    };
 
     // DEBUG
     setChapterAccordingToHash(false);
