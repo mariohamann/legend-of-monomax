@@ -1,15 +1,15 @@
 ---
 export interface Props {
-	to?: number;
+  to?: number;
 }
 
 const { to } = Astro.props;
 ---
 
 <div class='w-full text-center'>
-	<a
-		href=`#chapter-${to}`
-		class='border-2 outline-none border-secondary px-4 py-2 hover:bg-secondary focus:bg-secondary hover:text-primary focus:text-primary'
-		><slot>Continue</slot></a
-	>
+  <a
+    href=`#chapter-${to}`
+    class='border-2 outline-none rounded-md border-secondary px-4 py-2 hover:bg-secondary focus:bg-secondary hover:text-primary focus:text-primary'
+    ><slot>Continue</slot></a
+  >
 </div>
