@@ -17,15 +17,24 @@ const { chapter, question, title } = Astro.props;
 
 <div
   id=`chapter-${chapter}`
-  class='relative top-0 left-0'
+  class='mix-blend-screen relative top-0 left-0'
   :class=`$store.chapter===${chapter} || 'hidden opacity-0'`
 >
-  <h1 class='max-w-xl mx-auto text-4xl'>
-    {title}
-  </h1>
+  {
+    chapter === 0 ? (
+      <>
+        <h1 class='max-w-xl mx-auto text-6xl text-center'>{title}</h1>
+        <p class='max-w-xl mt-8 mx-auto text-4xl text-center'>
+          A Tale of Transformation
+        </p>
+      </>
+    ) : (
+      <h2 class='max-w-xl mx-auto text-4xl'>{title}</h2>
+    )
+  }
   <img
     src=`/images/chapter-${chapter}.png`
-    class='max-w-2xl mx-auto w-full my-12 rounded-md border-[3px] border-secondary border-opacity-90'
+    class='max-w-4xl mx-auto w-full my-12 lg:my-16 rounded-md'
   />
   <div class='max-w-xl mx-auto gap-y-5 flex-col flex'>
     <slot />

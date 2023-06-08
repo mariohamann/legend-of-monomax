@@ -13,6 +13,7 @@ import Chapter from "../components/Chapter.astro";
     <style is:global>
       img {
         image-rendering: pixelated;
+        /* filter: hue-rotate(-20deg); */
       }
       /* vt323-regular - latin */
       @font-face {
@@ -26,7 +27,7 @@ import Chapter from "../components/Chapter.astro";
       }
       .background {
         background: url("./images/bg.jpeg");
-        filter: brightness(0.37) hue-rotate(20deg);
+        filter: hue-rotate(-20deg) brightness(0.9);
       }
       .mix-blend-screen {
         transform: translate3d(0, 0, 0);
@@ -46,6 +47,17 @@ import Chapter from "../components/Chapter.astro";
     </div><div
       class='px-8 py-12 flex flex-col gap-32 min-h-screen justify-center'
     >
+      <Chapter
+        title='The Legend of MonoMax'
+        chapter={0}
+        question={{
+          text: "Do you want a side of handcrafted retro soundtrack to accompany your heroic journey with MonoMax? It will give you +10 in nostalgia and immersive gameplay.",
+          answers: [
+            "Yes, let's proceed with music!",
+            "No, I prefer to quest in quiet.",
+          ],
+        }}
+      />
       <Chapter title='I. The Power Paradox' chapter={1}>
         <p>
           In a vibrant pixelated city, MonoMax soars through the sky, his cape
@@ -73,67 +85,199 @@ import Chapter from "../components/Chapter.astro";
         }}
       >
         <p>
-          In a vibrant pixelated city, MonoMax soars through the sky, his cape
-          billowing behind her. He is the all-powerful superhero who can handle
-          any web content challenge with his wide array of monolithic CMS
-          abilities.
-        </p>
-        <p>
-          Lately, however, whispers of the new generation of superheroes, the
-          HeadlessHeroes, have reached his ears. They speak of increased
-          flexibility and adaptability, leaving MonoMax feeling overwhelmed by
-          the sheer weight of his powers.
+          One day, after foiling a nefarious plot, MonoMax finds himself perched
+          on a rooftop, contemplating his future. The city's lights twinkle
+          below him as he ponders the possibility of shedding some of his
+          powers, starting with his form handling abilities. As he gazes out at
+          the city he has sworn to protect, he wonders what reasons could
+          justify his decision.
         </p>
       </Chapter>
       <Chapter
-        title='III. The Ability Abyss'
+        title='III. The Enigmatic Envelope'
         chapter={3}
         question={{
-          text: "Why should MonoMax drop his form handling powers?",
+          text: "Why should MonoMax drop his form search powers?",
           answers: [
-            "Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
-            "Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
-            "Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
+            "Escape the Query Quagmire's sluggish search speeds and poor rankings!",
+            "Tired of battling the Keyword Kraken, a beast feasting on poorly optimized search results!",
+            "Avoid the perplexing PageRank Paradox and its ever-changing search algorithm maze!",
           ],
         }}
       >
         <p>
-          In a vibrant pixelated city, MonoMax soars through the sky, his cape
-          billowing behind her. He is the all-powerful superhero who can handle
-          any web content challenge with his wide array of monolithic CMS
-          abilities.
+          With a sigh of relief, MonoMax carries the Enigmatic Envelope
+          containing a piece of code representing his form handling powers to a
+          hidden library filled with ancient servers and futuristic holographic
+          displays. Placing the envelope in a specific slot in the library's
+          central computer terminal, his ability to create and process forms is
+          temporarily disabled.
         </p>
         <p>
-          Lately, however, whispers of the new generation of superheroes, the
-          HeadlessHeroes, have reached his ears. They speak of increased
-          flexibility and adaptability, leaving MonoMax feeling overwhelmed by
-          the sheer weight of his powers.
+          As he embraces his newfound freedom, a new superhero emerges from the
+          shadows: FormMaster. Agile and specialized, FormMaster takes on the
+          responsibility of form handling, ensuring that every submission is
+          processed with precision and finesse. Now, MonoMax sets his sights on
+          his search powers, ready to let go of yet another ability.
         </p>
       </Chapter>
       <Chapter
-        title='IV. The Ability Abyss'
+        title='IV. The Search Stone'
         chapter={4}
         question={{
-          text: "Why should MonoMax drop his form handling powers?",
+          text: "Why should MonoMax drop his assets saving power?",
           answers: [
-            "Dodge the infamous Spambot Squad, notorious for flooding heroes with unwanted submissions!",
-            "Evade the cunning Phisherman, scheming to compromise his secure data fortress!",
-            "Avoid the sinister Field Fiddler, exploiting vulnerable fields to wreak web content havoc!",
+            "Break free from the Cache Catastrophe's endless storage issues and slow loading times!",
+            "Avoid the never-ending fight against the Bandwidth Bandit, a villain stealing precious resources!",
+            "Experience the power of CDNs and the wonders of unlimited disk space and caching!",
           ],
         }}
       >
         <p>
-          In a vibrant pixelated city, MonoMax soars through the sky, his cape
-          billowing behind her. He is the all-powerful superhero who can handle
-          any web content challenge with his wide array of monolithic CMS
-          abilities.
+          MonoMax makes his way to a hidden cave where the legendary Search
+          Stones are stored. He carefully places the stone containing his search
+          powers, exposing it to the cave's shimmering crystalline light. As the
+          symbols on the stone start to fade, his search abilities are lost.
         </p>
         <p>
-          Lately, however, whispers of the new generation of superheroes, the
-          HeadlessHeroes, have reached his ears. They speak of increased
-          flexibility and adaptability, leaving MonoMax feeling overwhelmed by
-          the sheer weight of his powers.
+          With his burden lifted, a new superhero, SearchSorceress, emerges from
+          the shadows. Swift and specialized, SearchSorceress harnesses the
+          power of search algorithms, delivering accurate results with speed and
+          efficiency. Having relinquished two of his powers, MonoMax
+          contemplates his next move: to let go of his assets saving ability.
         </p>
+      </Chapter>
+
+      <Chapter
+        title='V. The Cryptic Cloud'
+        chapter={5}
+        question={{
+          text: "Why should MonoMax drop his templating power?",
+          answers: [
+            "Unleash the ultimate freedom to choose any frontend stack, free from constraints!",
+            "Utilize the latest and greatest web technologies for limitless possibilities!",
+            "Harness the power of structured data, making web development a breeze!",
+          ],
+        }}
+      >
+        <p>
+          MonoMax journeys to the Cryptic Cloud, a mystical realm hidden within
+          the swirling mists of cyberspace. He carries the Asset Amulet, a relic
+          that holds the essence of his assets saving power. As he places the
+          amulet on a pedestal surrounded by hovering data crystals, his assets
+          saving ability is suspended.
+        </p>
+        <p>
+          From the swirling mists, a new superhero emerges: AssetAce, an expert
+          in managing digital assets with unparalleled efficiency. With three
+          powers now shared among specialized superheroes, MonoMax ponders his
+          next challenge: relinquishing his ability to create templates.
+        </p>
+      </Chapter>
+      <Chapter
+        title='VI. The Temple of Templates'
+        chapter={6}
+        question={{
+          text: "Which protocol should MonoMax choose to enable authentication?",
+          answers: [
+            "Embrace the GraphQL Guardians, protectors of the powerful query language!",
+            "Join forces with the REST Rangers, champions of the classic API design!",
+            "Team up with the Auth0 Avengers, experts in identity management and security!",
+          ],
+        }}
+      >
+        <p>
+          MonoMax ventures to the Temple of Templates, an ancient structure
+          hidden deep within the canyons of the digital landscape. In his hands,
+          he holds the Chalice of Creativity, a vessel that contains the essence
+          of his templating powers. As he pours the contents of the chalice into
+          a glowing pool of liquid code, his templating abilities are released.
+        </p>
+        <p>
+          From the shimmering pool, a legion of Template Titans arises, each a
+          master of their own frontend domain. Giving up his templating powers,
+          MonoMax realises that he now has to find other ways to have the power
+          of authentication.
+        </p>
+      </Chapter>
+      <Chapter
+        title='VII. The Dilemma of Disintegration'
+        chapter={7}
+        question={{
+          text: "How should ModuMax handle this mission?",
+          answers: [
+            "By doing extensive research and teaming up with the perfect combination of specialized superheroes!",
+            "By building strong collaborations and forming a default stack of superheroes to work with!",
+          ],
+        }}
+      >
+        <p>
+          At the point where MonoMax wants to join the Auth0 Avengers, a mission
+          comes his way: building a secure eLearning platform with personalized
+          content for each user. This task would have been a breeze for MonoMax,
+          but now, he finds himself overwhelmed. He needs to coordinate with a
+          multitude of specialized superheroes to ensure seamless integration of
+          authentication, content management, and so on. MonoMax wonders how to
+          handle this mission.
+        </p>
+      </Chapter>
+      <Chapter title='VIII: The Chaos of Collaboration' chapter={8}>
+        <p>
+          As MonoMax attempts to bring the specialized superheroes together, he
+          quickly realizes that coordinating their efforts is far from easy. The
+          team struggles to find harmony, with each superhero's unique powers
+          and responsibilities clashing with one another. Miscommunication,
+          conflicting priorities, and the lack of a central command structure
+          create a chaotic environment, echoing the challenges faced by headless
+          web projects.
+        </p>
+        <p>
+          The once-simple eLearning platform mission becomes a complex
+          undertaking, with the superheroes inadvertently creating more issues
+          than they're solving. Their individual strengths fail to synergize,
+          and the team's progress grinds to a halt. Frustration mounts as the
+          once-mighty MonoMax realizes that his decision to let go of his powers
+          has led to an even greater challenge: taming the chaos born from the
+          collaboration of so many specialized heroes.
+        </p>
+      </Chapter>
+      <Chapter title='IX: The Metamorphosis of MonoMax' chapter={9}>
+        <p>
+          A sudden epiphany strikes him like a bolt of lightning. He realizes
+          that he can reclaim his powers and still work with his specialized
+          allies whenever needed. With newfound clarity and determination,
+          MonoMax understands that his true potential lies in his ability to be
+          both monolithic and modular, adapting to any mission's requirements.
+        </p>
+        <p>
+          In a spectacular moment of self-realization, MonoMax transforms into
+          ModuMax, a powerful superhero who can harness the best of both worlds.
+          Embracing her new identity, she tackles the eLearning platform mission
+          with ease, deftly using her restored powers while remaining open to
+          calling upon her specialized allies when necessary.
+        </p>
+      </Chapter>
+      <Chapter title='X: The Triumphant Transformation' chapter={10}>
+        <p>
+          As word of ModuMax's incredible versatility spreads, she becomes an
+          even more important superhero than before, celebrated for her ability
+          to adapt and collaborate. The people of the city rejoice, knowing that
+          they have a hero who can face any challenge, embodying the perfect
+          balance between the strengths of monolithic and headless CMSs.
+        </p>
+      </Chapter>
+      <Chapter title='XI: The Marvelous ModuMax' chapter={11}>
+        <p>
+          And so, ModuMax continues her journey, protecting the city with her
+          newfound strength and flexibility, always ready to build
+          collaborations with specialized superheroes when needed. Through her
+          actions, she champions the cause of versatile superheroes, showing the
+          world the true potential of adaptability and proving that sometimes,
+          the best heroes are those who can adapt to any situation. The city is
+          now safe under the watchful eye of ModuMax, and the future shines
+          brighter than ever before.
+        </p>
+        <p>– The End.</p>
       </Chapter>
       <Router />
     </div>

@@ -1,129 +1,129 @@
 <script>
-	import PixelAnimation from "../js/PixelAnimation.js";
-	import { AudioPlayer } from "../js/AudioPlayer";
-	// An array containing the URLs for the loop and ending audios for each part
-	const audioData = [
-		{ loop: "/audio/1-loop.m4a", ending: null },
-		{
-			loop: "/audio/2-loop.m4a",
-			ending: "/audio/2-ending.m4a",
-		},
-		{
-			loop: "/audio/3-loop.m4a",
-			ending: "/audio/3-ending.m4a",
-		},
-		{
-			loop: "/audio/4-loop.m4a",
-			ending: "/audio/4-ending.m4a",
-		},
-		{
-			loop: "/audio/5-loop.m4a",
-			ending: "/audio/5-ending.m4a",
-		},
-		,
-		{
-			loop: "/audio/6-loop.m4a",
-			ending: "/audio/6-ending.m4a",
-		},
-	];
+  import PixelAnimation from "../js/PixelAnimation.js";
+  import { AudioPlayer } from "../js/AudioPlayer";
+  // An array containing the URLs for the loop and ending audios for each part
+  const audioData = [
+    { loop: "/audio/1-loop.m4a", ending: null },
+    {
+      loop: "/audio/2-loop.m4a",
+      ending: "/audio/2-ending.m4a",
+    },
+    {
+      loop: "/audio/3-loop.m4a",
+      ending: "/audio/3-ending.m4a",
+    },
+    {
+      loop: "/audio/4-loop.m4a",
+      ending: "/audio/4-ending.m4a",
+    },
+    {
+      loop: "/audio/5-loop.m4a",
+      ending: "/audio/5-ending.m4a",
+    },
+    ,
+    {
+      loop: "/audio/6-loop.m4a",
+      ending: "/audio/6-ending.m4a",
+    },
+  ];
 
-	// Create a new instance of the AudioPlayer class
-	const audioPlayer = new AudioPlayer(audioData);
+  // Create a new instance of the AudioPlayer class
+  const audioPlayer = new AudioPlayer(audioData);
 
-	// Load the audio buffers
-	audioPlayer.loadAudioBuffers().then(() => {
-		console.log("Audio buffers loaded.");
-	});
+  // Load the audio buffers
+  audioPlayer.loadAudioBuffers().then(() => {
+    console.log("Audio buffers loaded.");
+  });
 
-	// Button event listeners
-	document.querySelectorAll("button[data-part]").forEach((button) => {
-		button.addEventListener("click", (event) => {
-			const newPart = event.target!.dataset.part;
-			audioPlayer.switchToNextAudio(newPart);
-		});
-	});
+  // Button event listeners
+  document.querySelectorAll("button[data-part]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const newPart = event.target!.dataset.part;
+      audioPlayer.switchToNextAudio(newPart);
+    });
+  });
 
-	document.addEventListener("alpine:init", () => {
-		Alpine.store("chapter", 1); // Initialize the store with the first chapter
+  document.addEventListener("alpine:init", () => {
+    Alpine.store("chapter", 0); // Initialize the store with the first chapter
 
-		const getChapterFromUrl = () => {
-			const chapterMatch = location.hash.match(/chapter-(\d+)/);
-			if (chapterMatch) {
-				const chapterNumber = parseInt(chapterMatch[1]);
-				return chapterNumber;
-			} else {
-				return 1;
-			}
-		};
+    const getChapterFromUrl = () => {
+      const chapterMatch = location.hash.match(/chapter-(\d+)/);
+      if (chapterMatch) {
+        const chapterNumber = parseInt(chapterMatch[1]);
+        return chapterNumber;
+      } else {
+        return 0;
+      }
+    };
 
-		const setChapterAccordingToHash = async (pixelate) => {
-			const chapter = getChapterFromUrl();
-			if (!pixelate) {
-				Alpine.store("chapter", chapter);
-				return;
-			}
-			audioPlayer.switchToNextAudio(chapter - 1);
-		};
+    const setChapterAccordingToHash = async (pixelate) => {
+      const chapter = getChapterFromUrl();
+      if (!pixelate) {
+        Alpine.store("chapter", chapter);
+        return;
+      }
+      audioPlayer.switchToNextAudio(chapter - 1);
+    };
 
-		// Listen for 'audioEvent' on the window object and update the progress bar
-		window.addEventListener("audioEvent", async (event) => {
-			const duration = event.detail.duration;
-			const currentChapterElement = document.getElementById(
-				`chapter-${Alpine.store("chapter")}`
-			)!;
-			const nextChapterElement = document.getElementById(
-				`chapter-${Alpine.store("chapter") + 1}`
-			)!;
+    // Listen for 'audioEvent' on the window object and update the progress bar
+    window.addEventListener("audioEvent", async (event) => {
+      const duration = event.detail.duration;
+      const currentChapterElement = document.getElementById(
+        `chapter-${Alpine.store("chapter")}`
+      )!;
+      const nextChapterElement = document.getElementById(
+        `chapter-${Alpine.store("chapter") + 1}`
+      )!;
 
-			nextChapterElement.style.opacity = "0%";
-			nextChapterElement.style.transitionDuration = `${
-				duration * 0.5 - 50 / 1000
-			}s`;
+      nextChapterElement.style.opacity = "0%";
+      nextChapterElement.style.transitionDuration = `${
+        duration * 0.5 - 50 / 1000
+      }s`;
 
-			const pixelAnimation = new PixelAnimation({
-				color: "#1F0E1C",
-				blockSize: 4,
-			});
-			currentChapterElement.style.opacity = "100%";
-			currentChapterElement.style.transitionDuration = `${
-				duration * 0.5 - 50 / 1000
-			}s`;
-			currentChapterElement.style.opacity = "0%";
-			// setTimeout(() => {
-			// 	currentChapterElement.style.opacity = "100%";
-			// 	currentChapterElement.style.transitionDuration = "0s";
-			// }, duration * 0.5 - 50 / 1000);
-			await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
-			await pixelAnimation.sleep(100);
-			console.log(nextChapterElement.style.opacity);
-			Alpine.store("chapter", Alpine.store("chapter") + 1);
-			console.log(nextChapterElement.style.opacity);
-			console.log(nextChapterElement.style.transitionDuration);
-			// nextChapterElement.style.opacity = "100%";
-			console.log(nextChapterElement.style.opacity);
-			await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
-		});
+      const pixelAnimation = new PixelAnimation({
+        color: "#1F0E1C",
+        blockSize: 4,
+      });
+      currentChapterElement.style.opacity = "100%";
+      currentChapterElement.style.transitionDuration = `${
+        duration * 0.5 - 50 / 1000
+      }s`;
+      currentChapterElement.style.opacity = "0%";
+      // setTimeout(() => {
+      // 	currentChapterElement.style.opacity = "100%";
+      // 	currentChapterElement.style.transitionDuration = "0s";
+      // }, duration * 0.5 - 50 / 1000);
+      await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
+      await pixelAnimation.sleep(100);
+      console.log(nextChapterElement.style.opacity);
+      Alpine.store("chapter", Alpine.store("chapter") + 1);
+      console.log(nextChapterElement.style.opacity);
+      console.log(nextChapterElement.style.transitionDuration);
+      // nextChapterElement.style.opacity = "100%";
+      console.log(nextChapterElement.style.opacity);
+      await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
+    });
 
-		// DEBUG
-		setChapterAccordingToHash(false);
+    // DEBUG
+    setChapterAccordingToHash(false);
 
-		// PRODUCTION
-		// if (getChapterFromUrl() > 1) {
-		// 	if (
-		// 		confirm(
-		// 			`Do you want to jump to chapter ${getChapterFromUrl()}? Cancel to start from the beginning.`
-		// 		) == true
-		// 	) {
-		// 		setChapterAccordingToHash(); // Set the chapter according to the hash on page load
-		// 	} else {
-		// 		location.hash = "#chapter-1";
-		// 		Alpine.store("chapter", 1);
-		// 	}
-		// }
+    // PRODUCTION
+    // if (getChapterFromUrl() > 1) {
+    // 	if (
+    // 		confirm(
+    // 			`Do you want to jump to chapter ${getChapterFromUrl()}? Cancel to start from the beginning.`
+    // 		) == true
+    // 	) {
+    // 		setChapterAccordingToHash(); // Set the chapter according to the hash on page load
+    // 	} else {
+    // 		location.hash = "#chapter-1";
+    // 		Alpine.store("chapter", 1);
+    // 	}
+    // }
 
-		// Listen for changes in the URL
-		window.addEventListener("hashchange", () =>
-			setChapterAccordingToHash(true)
-		);
-	});
+    // Listen for changes in the URL
+    window.addEventListener("hashchange", () =>
+      setChapterAccordingToHash(true)
+    );
+  });
 </script>
