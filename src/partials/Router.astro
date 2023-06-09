@@ -147,21 +147,26 @@
     };
 
     // DEBUG
-    setChapterAccordingToHash(false);
+    // setChapterAccordingToHash(false);
 
     // PRODUCTION
-    // if (getChapterFromUrl() > 1) {
-    // 	if (
-    // 		confirm(
-    // 			`Do you want to jump to chapter ${getChapterFromUrl()}? Cancel to start from the beginning.`
-    // 		) == true
-    // 	) {
-    // 		setChapterAccordingToHash(); // Set the chapter according to the hash on page load
-    // 	} else {
-    // 		location.hash = "";
-    // 		Alpine.store("chapter", 0);
-    // 	}
-    // }
+    if (getChapterFromUrl() > 0) {
+      // wait until document is loaded
+      if (
+        confirm(
+          `Do you want to start from chapter ${getChapterFromUrl()}? Cancel to start from the beginning (and be able to activate music).`
+        ) == true
+      ) {
+        setChapterAccordingToHash(false); // Set the chapter according to the hash on page load
+      } else {
+        Alpine.store("chapter", 0);
+        history.pushState(
+          "",
+          document.title,
+          window.location.pathname + window.location.search
+        );
+      }
+    }
 
     // Listen for changes in the URL
     window.addEventListener("hashchange", () =>

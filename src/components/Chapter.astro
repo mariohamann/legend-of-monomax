@@ -23,7 +23,9 @@ const { chapter, question, title } = Astro.props;
   {
     chapter === 0 ? (
       <>
-        <h1 class='max-w-xl mx-auto text-6xl text-center'>{title}</h1>
+        <h1 class='max-w-xl mx-auto text-[clamp(16px,8vw,68px)] text-center'>
+          {title}
+        </h1>
         <p class='max-w-xl mt-8 mx-auto text-4xl text-center'>
           A Tale of Transformation
         </p>
