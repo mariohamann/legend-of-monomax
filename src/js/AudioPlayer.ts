@@ -14,7 +14,7 @@ type AudioData = {
 export class AudioPlayer {
   private audioContext: AudioContext;
   private audioBuffers: AudioBuffers;
-  private currentPart: string | null;
+  private currentPart: number | null;
   private currentSource: AudioBufferSourceNode | null;
   private currentSourceStartTime: number | null;
 
@@ -62,7 +62,7 @@ export class AudioPlayer {
     return source;
   }
 
-  switchToNextAudio(newPart: string) {
+  switchToNextAudio(newPart: number) {
     if (this.currentPart === newPart && this.currentSource) {
       return;
     }
@@ -121,7 +121,7 @@ export class AudioPlayer {
       }
     }
 
-    if (this.currentSource && newPart !== "1") {
+    if (this.currentSource) {
       const elapsedTime =
         this.audioContext.currentTime - (this.currentSourceStartTime || 0);
       const loopTimeRemaining =
