@@ -45,151 +45,144 @@
     },
   ];
 
-  // Create a new instance of the AudioPlayer class
   const audioPlayer = new AudioPlayer(audioData);
-
-  // Load the audio buffers
   audioPlayer.loadAudioBuffers().then(() => {
     console.log("Audio buffers loaded.");
   });
 
-  document
-    .getElementById("answer-0-0")
-    .addEventListener("click", async (event) => {
-      // Prevent the default action (navigation) from taking place
-      event.preventDefault();
-
-      Alpine.store("audio", true); // Initialize the store with the first chapter
-
-      // Update the location hash to reflect the current chapter
-      window.location.hash = "#chapter-1";
-
-      audioPlayer.switchToNextAudio(0);
-    });
-
+  // Store initialization
   document.addEventListener("alpine:init", () => {
-    Alpine.store("chapter", 0); // Initialize the store with the first chapter
+    Alpine.store("chapter", 0);
+    Alpine.store("audio", false);
 
-    const getChapterFromUrl = () => {
-      const chapterMatch = location.hash.match(/chapter-(\d+)/);
-      if (chapterMatch) {
-        const chapterNumber = parseInt(chapterMatch[1]);
-        return chapterNumber;
-      } else {
-        return 0;
-      }
-    };
-
-    const setChapterAccordingToHash = async (pixelate) => {
-      const chapter = getChapterFromUrl();
-      if (!pixelate) {
-        if (chapter > 0) {
-          const navigation = document.getElementById(`navigation`)!;
-          navigation.style.opacity = "20%";
-        }
-        Alpine.store("chapter", chapter);
-        // loop through every element with navigation-${number smaller as chapter} and set width to 100%
-        for (let i = 1; i < chapter + 1; i++) {
-          console.log(`navigation-${i}`);
-          const navigationElement = document.getElementById(`navigation-${i}`)!;
-          navigationElement.style.transitionDuration = "0s";
-          navigationElement.style.width = "100%";
-        }
-        return;
-      }
-      if (Alpine.store("audio") === true) {
-        audioPlayer.switchToNextAudio(chapter - 1);
-      } else {
-        makeTransition(2);
-      }
-    };
-
-    // Listen for 'audioEvent' on the window object and update the progress bar
-    window.addEventListener("audioEvent", async (event) => {
-      const duration = event.detail.duration;
-      if (getChapterFromUrl() < 2) {
-        makeTransition(2);
-        return;
-      }
-      makeTransition(duration);
-    });
-
-    const makeTransition = async (duration: number) => {
-      const overlay = document.getElementById(`overlay`)!;
-
-      const navigation = document.getElementById(`navigation`)!;
-      const navigationElement = document.getElementById(
-        `navigation-${getChapterFromUrl()}`
-      )!;
-
-      const durationInSeconds = `${duration * 0.5 - 50 / 1000}s`;
-      overlay.style.transitionDuration = durationInSeconds;
-      overlay.style.opacity = "0%";
-
-      const pixelAnimation = new PixelAnimation({
-        color: "#1A0C1A",
-        blockSize: 4,
-      });
-      navigation.style.transitionDuration = durationInSeconds;
-      navigation.style.opacity = "100%";
-      overlay.style.opacity = "100%";
-      navigationElement.style.transitionDuration = `${duration}s`;
-      navigationElement.style.width = "100%";
-      await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
-      await pixelAnimation.sleep(100);
-      window.scrollTo({
-        top: 0,
-      });
-      Alpine.store("chapter", getChapterFromUrl());
-      overlay.style.opacity = "0%";
-      navigation.style.opacity = "20%";
-      await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
-    };
-
-    // DEBUG
-    // setChapterAccordingToHash(false);
-
-    // PRODUCTION
     if (getChapterFromUrl() > 0) {
-      // wait until document is loaded
-      if (
-        confirm(
-          `Do you want to start from chapter ${getChapterFromUrl()}? Cancel to start from the beginning (and be able to activate music).`
-        ) == true
-      ) {
-        setChapterAccordingToHash(false); // Set the chapter according to the hash on page load
-      } else {
-        Alpine.store("chapter", 0);
-        history.pushState(
-          "",
-          document.title,
-          window.location.pathname + window.location.search
-        );
-      }
+      confirmStartChapter(getChapterFromUrl());
     }
 
-    // Listen for changes in the URL
-    window.addEventListener("hashchange", () =>
-      setChapterAccordingToHash(true)
-    );
+    document
+      .getElementById("answer-0-0")
+      .addEventListener("click", startWithMusic);
+
+    window.addEventListener("hashchange", onUrlChange);
+    window.addEventListener("audioEvent", onAudioEvent);
+
+    Alpine.effect(updateDocumentTitle);
+  });
+
+  function getChapterFromUrl() {
+    const chapterMatch = location.hash.match(/chapter-(\d+)/);
+    return chapterMatch ? parseInt(chapterMatch[1]) : 0;
+  }
+
+  async function startWithMusic(event) {
+    event.preventDefault();
+
+    Alpine.store("audio", true);
+    window.location.hash = "#chapter-1";
+    await audioPlayer.switchToNextAudio(0);
+  }
+
+  async function confirmStartChapter(chapterNumber) {
+    if (
+      confirm(
+        `Do you want to start from chapter ${chapterNumber}? Cancel to start from the beginning (and be able to activate music).`
+      )
+    ) {
+      await setChapterAccordingToHash(false);
+    } else {
+      Alpine.store("chapter", 0);
+      history.pushState(
+        "",
+        document.title,
+        window.location.pathname + window.location.search
+      );
+    }
+  }
+
+  async function setChapterAccordingToHash(pixelate) {
+    const chapter = getChapterFromUrl();
+    if (!pixelate) {
+      if (chapter > 0) {
+        document.getElementById(`navigation`)!.style.opacity = "20%";
+      }
+      Alpine.store("chapter", chapter);
+      // Loop through every element with navigation-${number smaller as chapter} and set width to 100%
+      for (let i = 1; i < chapter + 1; i++) {
+        console.log(`navigation-${i}`);
+        const navigationElement = document.getElementById(`navigation-${i}`)!;
+        navigationElement.style.transitionDuration = "0s";
+        navigationElement.style.width = "100%";
+      }
+      return;
+    }
+    if (Alpine.store("audio") === true) {
+      await audioPlayer.switchToNextAudio(chapter - 1);
+    } else {
+      await makeTransition(2);
+    }
+  }
+
+  async function onUrlChange() {
+    await setChapterAccordingToHash(true);
+  }
+
+  async function onAudioEvent(event) {
+    const duration = event.detail.duration;
+    if (getChapterFromUrl() < 2) {
+      await makeTransition(2);
+      return;
+    }
+    await makeTransition(duration);
+  }
+
+  async function makeTransition(duration) {
+    const overlay = document.getElementById(`overlay`)!;
+
+    const navigation = document.getElementById(`navigation`)!;
+    const navigationElement = document.getElementById(
+      `navigation-${getChapterFromUrl()}`
+    )!;
+
+    const durationInSeconds = `${duration * 0.5 - 50 / 1000}s`;
+    overlay.style.transitionDuration = durationInSeconds;
+    overlay.style.opacity = "0%";
+
+    const pixelAnimation = new PixelAnimation({
+      color: "#1A0C1A",
+      blockSize: 4,
+    });
+    navigation.style.transitionDuration = durationInSeconds;
+    navigation.style.opacity = "100%";
+    overlay.style.opacity = "100%";
+    navigationElement.style.transitionDuration = `${duration}s`;
+    navigationElement.style.width = "100%";
+    await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
+    await pixelAnimation.sleep(100);
+    window.scrollTo({
+      top: 0,
+    });
+    Alpine.store("chapter", getChapterFromUrl());
+    overlay.style.opacity = "0%";
+    navigation.style.opacity = "20%";
+    await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
+  }
+
+  function updateDocumentTitle() {
+    const chapter = Alpine.store("chapter");
+    const chapterTitle = document.querySelector(
+      `#chapter-${chapter} h2, #chapter-${chapter} p`
+    )?.textContent;
 
     const mainTitle = document.querySelector("h1")?.textContent;
 
-    Alpine.effect(() => {
-      const chapter = Alpine.store("chapter");
-      const chapterTitle = document.querySelector(
-        `#chapter-${chapter} h2, #chapter-${chapter} p`
-      )?.textContent;
+    // set the document title to the chapter title
+    document.title = `${mainTitle} – ${chapterTitle}`;
 
-      // set the document title to the chapter title
-      document.title = `${mainTitle} – ${chapterTitle}`;
-
-      // set history state to set current title
-      history.replaceState(
-        { title: document.title },
-        document.title,
-        location.href
-      );
-    });
-  });
+    // set history state to set current title
+    history.replaceState(
+      { title: document.title },
+      document.title,
+      location.href
+    );
+  }
 </script>
