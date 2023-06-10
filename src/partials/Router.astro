@@ -52,17 +52,35 @@
     },
   ];
 
-  const audioPlayer = new AudioPlayer(audioData);
-  audioPlayer.loadAudioBuffers().then(() => {
-    console.log("Audio buffers loaded.");
-  });
-
+  let audioPlayer: AudioPlayer;
   let chapter: number;
-  let audio = false;
 
   document
     .getElementById("answer-0-0")!
-    .addEventListener("click", startWithMusic);
+    .addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      audioPlayer = new AudioPlayer(audioData);
+
+      // Dummy sound to unlock Safari's AudioContext
+      const source = audioPlayer.audioContext.createBufferSource();
+      source.buffer = audioPlayer.audioContext.createBuffer(1, 1, 22050);
+      source.connect(audioPlayer.audioContext.destination);
+      source.start();
+
+      try {
+        await audioPlayer.audioContext.resume();
+      } catch (e) {
+        console.error("Failed to resume AudioContext:", e);
+      }
+
+      await audioPlayer.loadAudioBuffers().then(() => {
+        console.log("Audio buffers loaded.");
+      });
+
+      window.location.hash = "#chapter-1";
+      await audioPlayer.switchToNextAudio(0);
+    });
 
   window.addEventListener("hashchange", onUrlChange);
   window.addEventListener("audioEvent", onAudioEvent);
@@ -78,14 +96,6 @@
   function getChapterFromUrl() {
     const chapterMatch = location.hash.match(/chapter-(\d+)/);
     return chapterMatch ? parseInt(chapterMatch[1]) : 0;
-  }
-
-  async function startWithMusic(event: any) {
-    event.preventDefault();
-
-    audio = true;
-    window.location.hash = "#chapter-1";
-    await audioPlayer.switchToNextAudio(0);
   }
 
   async function confirmStartChapter() {
@@ -113,14 +123,13 @@
       setChapter(currentChapter);
       // Loop through every element with navigation-${number smaller as chapter} and set width to 100%
       for (let i = 1; i < currentChapter + 1; i++) {
-        console.log(`navigation-${i}`);
         const navigationElement = document.getElementById(`navigation-${i}`)!;
         navigationElement.style.transitionDuration = "0s";
         navigationElement.style.width = "100%";
       }
       return;
     }
-    if (audio === true) {
+    if (audioPlayer) {
       await audioPlayer.switchToNextAudio(currentChapter - 1);
     } else {
       await makeTransition(2);
@@ -137,7 +146,6 @@
       await makeTransition(2);
       return;
     }
-    console.log(`Chapter ${chapter} ended. Duration: ${duration}s`);
     await makeTransition(duration);
   }
 

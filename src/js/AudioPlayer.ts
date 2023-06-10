@@ -12,7 +12,7 @@ type AudioData = {
 };
 
 export class AudioPlayer {
-  private audioContext: AudioContext;
+  public audioContext: AudioContext;
   private audioBuffers: AudioBuffers;
   private currentPart: number | null;
   private currentSource: AudioBufferSourceNode | null;
