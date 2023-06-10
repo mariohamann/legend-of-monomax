@@ -19,22 +19,24 @@ const { chapter, question, title } = Astro.props;
   {
     chapter === 0 ? (
       <>
-        <h1 class='max-w-xl mx-auto text-[clamp(48px,8vw,68px)] text-center leading-10'>
+        <h1 class='px-8 sm:px-0 max-w-xl mx-auto text-[clamp(48px,8vw,68px)] text-center leading-10'>
           {title}
         </h1>
-        <p class='max-w-xl mt-8 mx-auto text-4xl text-center'>
+        <p class='px-8 sm:px-0 max-w-xl mt-8 mx-auto text-4xl text-center'>
           A Tale of Transformation
         </p>
       </>
     ) : (
-      <h2 class='max-w-xl mx-auto text-4xl'>{title}</h2>
+      <h2 class='px-8 sm:px-0 max-w-xl mx-auto text-4xl'>{title}</h2>
     )
   }
-  <img
-    src=`/images/chapter-${chapter}.png`
-    class='max-w-4xl mx-auto w-full my-12 lg:my-16 rounded-xl'
-  />
-  <div class='max-w-xl mx-auto gap-y-5 flex-col flex'>
+  <div class='md:px-8'>
+    <img
+      src=`/images/chapter-${chapter}.png`
+      class='max-w-4xl mx-auto w-full my-12 lg:my-16 md:rounded-xl'
+    />
+  </div>
+  <div class='px-8 sm:px-0 max-w-xl mx-auto gap-y-5 flex-col flex'>
     <slot />
     <div class='mt-8'>
       <OnlyWithJs>
