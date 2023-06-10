@@ -27,21 +27,34 @@ export class AudioPlayer {
   }
 
   async loadAudioBuffers() {
+    const promises = [];
+
     for (const part in this.audioData) {
       const loop = this.audioData[part].loop;
       const ending = this.audioData[part].ending;
       if (loop) {
-        this.audioBuffers[`${part}-loop`] = await this.loadAudio(loop);
+        promises.push(
+          this.loadAudio(loop).then(buffer => {
+            this.audioBuffers[`${part}-loop`] = buffer;
+          })
+        );
       } else {
         this.audioBuffers[`${part}-loop`] = null;
       }
       if (ending) {
-        this.audioBuffers[`${part}-ending`] = await this.loadAudio(ending);
+        promises.push(
+          this.loadAudio(ending).then(buffer => {
+            this.audioBuffers[`${part}-ending`] = buffer;
+          })
+        );
       } else {
         this.audioBuffers[`${part}-ending`] = null;
       }
     }
+
+    await Promise.all(promises);
   }
+
 
   private loadAudio(url: string): Promise<AudioBuffer> {
     return fetch(url)
