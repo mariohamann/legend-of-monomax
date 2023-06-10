@@ -68,6 +68,27 @@
       source.connect(audioPlayer.audioContext.destination);
       source.start();
 
+      function iOS() {
+        return (
+          [
+            "iPad Simulator",
+            "iPhone Simulator",
+            "iPod Simulator",
+            "iPad",
+            "iPhone",
+            "iPod",
+          ].includes(navigator.platform) ||
+          // iPad on iOS 13 detection
+          (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+        );
+      }
+
+      if (iOS()) {
+        alert(
+          "Hello, iDevice user! Please make sure to turn off your device's silent switch."
+        );
+      }
+
       try {
         await audioPlayer.audioContext.resume();
       } catch (e) {
