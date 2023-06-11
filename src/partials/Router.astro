@@ -164,11 +164,12 @@
 
   async function onAudioEvent(event: any) {
     const duration = event.detail.duration;
-    const transitionManager = new TransitionManager(duration * 1000);
     if (chapter === 0) {
+      const transitionManager = new TransitionManager();
       await transitionManager.makeTransition();
       return;
     }
+    const transitionManager = new TransitionManager(duration * 1000);
     await transitionManager.makeTransition();
   }
 
@@ -178,9 +179,13 @@
     private navigationElement: HTMLElement;
     private transitionElement: HTMLElement;
     private pixelAnimation: PixelAnimation;
-    private duration: number;
+    private duration = {
+      in: 750,
+      delay: 4000,
+      out: 750,
+    };
 
-    constructor(duration: number) {
+    constructor(duration?: number) {
       this.overlay = document.getElementById("overlay")!;
       this.navigation = document.getElementById("navigation")!;
       this.navigationElement = document.getElementById(
@@ -195,13 +200,23 @@
         blockSize: 4,
       });
 
-      this.duration = duration;
+      if (duration && duration > 4750) {
+        this.duration.in = duration - 4000;
+      } else {
+        this.duration.in = 750;
+      }
     }
 
     public async startTransition() {
-      this.overlay.style.transitionDuration = "0.5s";
+      // 1. set transition duration
+      this.overlay.style.transitionDuration = `${this.duration.in}ms`;
+      this.navigation.style.transitionDuration = `${this.duration.in}ms`;
+      this.navigationElement.style.transitionDuration = `${
+        this.duration.in + this.duration.delay + this.duration.out
+      }ms`;
+
+      // 2. set defaults before transition
       this.overlay.style.opacity = "0%";
-      // find and hide all other transitionElements
       document
         .querySelectorAll('[id^="transition-"]')
         .forEach((transitionElement) => {
@@ -210,17 +225,16 @@
 
       this.transitionElement.style.display = "flex";
 
-      this.navigation.style.transitionDuration = "0.5s";
+      // 3. start transition
       this.navigation.style.opacity = "100%";
-
       this.overlay.style.opacity = "100%";
-      this.navigationElement.style.transitionDuration = `500ms`;
       this.navigationElement.style.width = "100%";
-      await this.pixelAnimation.createPixels(500);
-      await this.pixelAnimation.sleep(this.duration - 500);
+
+      await this.pixelAnimation.createPixels(this.duration.in);
     }
 
     public async pauseTransition() {
+      await this.pixelAnimation.sleep(this.duration.delay);
       window.scrollTo({
         top: 0,
       });
@@ -229,9 +243,14 @@
     }
 
     public async endTransition() {
+      // 1. set transition duration
+      this.overlay.style.transitionDuration = `${this.duration.out}ms`;
+      this.navigation.style.transitionDuration = `${this.duration.out}ms`;
+
+      // 2. start transition
       this.overlay.style.opacity = "0%";
       this.navigation.style.opacity = "20%";
-      await this.pixelAnimation.removePixels(750);
+      await this.pixelAnimation.removePixels(this.duration.out);
       this.transitionElement.style.display = "none";
     }
 
