@@ -153,7 +153,8 @@
     if (audioPlayer) {
       await audioPlayer.switchToNextAudio(currentChapter - 1);
     } else {
-      await makeTransition(4000);
+      const transitionManager = new TransitionManager(4000);
+      await transitionManager.makeTransition();
     }
   }
 
@@ -163,50 +164,82 @@
 
   async function onAudioEvent(event: any) {
     const duration = event.detail.duration;
+    const transitionManager = new TransitionManager(duration * 1000);
     if (chapter === 0) {
-      await makeTransition(4);
+      await transitionManager.makeTransition();
       return;
     }
-    await makeTransition(duration * 1000);
+    await transitionManager.makeTransition();
   }
 
-  async function makeTransition(duration: number) {
-    const overlay = document.getElementById("overlay")!;
-    const navigation = document.getElementById("navigation")!;
-    const navigationElement = document.getElementById(
-      `navigation-${getChapterFromUrl()}`
-    )!;
-    const transitionElement = document.getElementById(
-      `transition-${getChapterFromUrl() - 1}`
-    )!;
+  class TransitionManager {
+    private overlay: HTMLElement;
+    private navigation: HTMLElement;
+    private navigationElement: HTMLElement;
+    private transitionElement: HTMLElement;
+    private pixelAnimation: PixelAnimation;
+    private duration: number;
 
-    const pixelAnimation = new PixelAnimation({
-      color: "#1A0C1A",
-      blockSize: 4,
-    });
+    constructor(duration: number) {
+      this.overlay = document.getElementById("overlay")!;
+      this.navigation = document.getElementById("navigation")!;
+      this.navigationElement = document.getElementById(
+        `navigation-${getChapterFromUrl()}`
+      )!;
+      this.transitionElement = document.getElementById(
+        `transition-${getChapterFromUrl() - 1}`
+      )!;
 
-    beforeChapterSwitch(
-      overlay,
-      navigation,
-      navigationElement,
-      transitionElement,
-      "0.5s",
-      duration + 500
-    );
+      this.pixelAnimation = new PixelAnimation({
+        color: "#1A0C1A",
+        blockSize: 4,
+      });
 
-    await pixelAnimation.createPixels(500);
-    await pixelAnimation.sleep(duration - 500);
+      this.duration = duration;
+    }
 
-    window.scrollTo({
-      top: 0,
-    });
+    public async startTransition() {
+      this.overlay.style.transitionDuration = "0.5s";
+      this.overlay.style.opacity = "0%";
+      // find and hide all other transitionElements
+      document
+        .querySelectorAll('[id^="transition-"]')
+        .forEach((transitionElement) => {
+          transitionElement.style.display = "none";
+        });
 
-    setChapter(getChapterFromUrl());
+      this.transitionElement.style.display = "flex";
 
-    afterChapterSwitch(overlay, navigation);
+      this.navigation.style.transitionDuration = "0.5s";
+      this.navigation.style.opacity = "100%";
 
-    await pixelAnimation.removePixels(750);
-    transitionElement.style.display = "none";
+      this.overlay.style.opacity = "100%";
+      this.navigationElement.style.transitionDuration = `500ms`;
+      this.navigationElement.style.width = "100%";
+      await this.pixelAnimation.createPixels(500);
+      await this.pixelAnimation.sleep(this.duration - 500);
+    }
+
+    public async pauseTransition() {
+      window.scrollTo({
+        top: 0,
+      });
+
+      setChapter(getChapterFromUrl());
+    }
+
+    public async endTransition() {
+      this.overlay.style.opacity = "0%";
+      this.navigation.style.opacity = "20%";
+      await this.pixelAnimation.removePixels(750);
+      this.transitionElement.style.display = "none";
+    }
+
+    public async makeTransition() {
+      await this.startTransition();
+      await this.pauseTransition();
+      await this.endTransition();
+    }
   }
 
   function setChapter(newChapter: number) {
@@ -227,41 +260,6 @@
       currentChapter.classList.remove("hidden");
       currentChapter.classList.remove("opacity-0");
     }
-  }
-
-  function beforeChapterSwitch(
-    overlay: HTMLElement,
-    navigation: HTMLElement,
-    navigationElement: HTMLElement,
-    transitionElement: HTMLElement,
-    durationInSeconds: string,
-    duration: number
-  ) {
-    overlay.style.transitionDuration = durationInSeconds;
-    overlay.style.opacity = "0%";
-    // find and hide all other transitionElements
-    document
-      .querySelectorAll('[id^="transition-"]')
-      .forEach((transitionElement) => {
-        transitionElement.style.display = "none";
-      });
-
-    transitionElement.style.display = "flex";
-
-    navigation.style.transitionDuration = durationInSeconds;
-    navigation.style.opacity = "100%";
-
-    overlay.style.opacity = "100%";
-    navigationElement.style.transitionDuration = `${duration}ms`;
-    navigationElement.style.width = "100%";
-  }
-
-  function afterChapterSwitch(overlay: HTMLElement, navigation: HTMLElement) {
-    // Update the DOM to reflect the new chapter
-    setChapter(chapter);
-
-    overlay.style.opacity = "0%";
-    navigation.style.opacity = "20%";
   }
 
   function updateDocumentTitle() {
