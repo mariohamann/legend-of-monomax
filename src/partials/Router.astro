@@ -153,7 +153,7 @@
     if (audioPlayer) {
       await audioPlayer.switchToNextAudio(currentChapter - 1);
     } else {
-      await makeTransition(2);
+      await makeTransition(4000);
     }
   }
 
@@ -164,10 +164,10 @@
   async function onAudioEvent(event: any) {
     const duration = event.detail.duration;
     if (chapter === 0) {
-      await makeTransition(2);
+      await makeTransition(4);
       return;
     }
-    await makeTransition(duration);
+    await makeTransition(duration * 1000);
   }
 
   async function makeTransition(duration: number) {
@@ -176,8 +176,10 @@
     const navigationElement = document.getElementById(
       `navigation-${getChapterFromUrl()}`
     )!;
+    const transitionElement = document.getElementById(
+      `transition-${getChapterFromUrl() - 1}`
+    )!;
 
-    const durationInSeconds = `${duration * 0.5 - 50 / 1000}s`;
     const pixelAnimation = new PixelAnimation({
       color: "#1A0C1A",
       blockSize: 4,
@@ -187,12 +189,13 @@
       overlay,
       navigation,
       navigationElement,
-      durationInSeconds,
-      duration
+      transitionElement,
+      "0.5s",
+      duration + 500
     );
 
-    await pixelAnimation.createPixels(duration * 0.5 * 1000 - 50);
-    await pixelAnimation.sleep(100);
+    await pixelAnimation.createPixels(500);
+    await pixelAnimation.sleep(duration - 500);
 
     window.scrollTo({
       top: 0,
@@ -202,7 +205,8 @@
 
     afterChapterSwitch(overlay, navigation);
 
-    await pixelAnimation.removePixels(duration * 0.5 * 1000 - 50);
+    await pixelAnimation.removePixels(750);
+    transitionElement.style.display = "none";
   }
 
   function setChapter(newChapter: number) {
@@ -229,17 +233,26 @@
     overlay: HTMLElement,
     navigation: HTMLElement,
     navigationElement: HTMLElement,
+    transitionElement: HTMLElement,
     durationInSeconds: string,
     duration: number
   ) {
     overlay.style.transitionDuration = durationInSeconds;
     overlay.style.opacity = "0%";
+    // find and hide all other transitionElements
+    document
+      .querySelectorAll('[id^="transition-"]')
+      .forEach((transitionElement) => {
+        transitionElement.style.display = "none";
+      });
+
+    transitionElement.style.display = "flex";
 
     navigation.style.transitionDuration = durationInSeconds;
     navigation.style.opacity = "100%";
 
     overlay.style.opacity = "100%";
-    navigationElement.style.transitionDuration = `${duration}s`;
+    navigationElement.style.transitionDuration = `${duration}ms`;
     navigationElement.style.width = "100%";
   }
 

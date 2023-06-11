@@ -1,29 +1,33 @@
 ---
 export interface Props {
-	to: number;
-	question: {
-		text: string;
-		answers: string[] | { text: string; href: number }[];
-	};
+  to: number;
+  question: {
+    text: string;
+    answers: string[] | { text: string; href: number }[];
+  };
 }
 
 const { to, question } = Astro.props;
 ---
 
 <div class='bg-secondary text-primary p-6 opacity-90 rounded-lg'>
-	<p class='mb-4'>{question.text}</p>
-	<div class='w-full space-y-2'>
+  <p class='mb-4'>{question.text}</p>
+  <div class='w-full space-y-2'>
     {
       question.answers.map((answer, index) => (
         <a
-          id=`answer-${to-1}-${index}`
+          id={`answer-${to - 1}-${index}`}
           href={answer.href || `#chapter-${to}`}
           class='flex w-full text-left group leading-snug outline-none'
         >
-          <span class="group-focus:text-primary shrink-0 group-hover:text-primary text-shade w-6 inline-block transition-colors duration-300" >&gt;</span>
-          <span class="underline decoration-2 decoration-[transparent] group-focus:decoration-primary group-hover:decoration-primary transition-colors duration-300">{answer.text || answer}</span>
+          <span class='group-focus:text-primary shrink-0 group-hover:text-primary text-shade w-6 inline-block transition-colors duration-300'>
+            &gt;
+          </span>
+          <span class='underline decoration-2 decoration-[transparent] group-focus:decoration-primary group-hover:decoration-primary transition-colors duration-300'>
+            {answer.text || answer}
+          </span>
         </a>
       ))
     }
-	</div>
+  </div>
 </div>

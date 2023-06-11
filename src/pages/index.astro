@@ -2,10 +2,11 @@
 import Router from "../partials/Router.astro";
 import Chapter from "../components/Chapter.astro";
 import Background from "../components/Background.astro";
+import Transition from "../components/Transition.astro";
 ---
 
 <!DOCTYPE html>
-<html lang='en' class="bg-[#110E1D]">
+<html lang='en' class='bg-[#110E1D]'>
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
@@ -51,7 +52,7 @@ import Background from "../components/Background.astro";
         question={{
           text: "Do you want a handcrafted retro soundtrack to accompany your heroic journey with MonoMax? It will give you +10 in nostalgia and immersive gameplay.",
           answers: [
-            "Yes, let's proceed with music!",
+            "Yes, let's move with music!",
             "No, I prefer to quest in quiet.",
           ],
         }}
@@ -108,7 +109,7 @@ import Background from "../components/Background.astro";
         title='III. The Enigmatic Envelope'
         chapter={3}
         question={{
-          text: "Why should MonoMax drop his form search powers?",
+          text: "Why should MonoMax drop his search powers?",
           answers: [
             "Escape the Query Quagmire's sluggish search speeds and poor rankings!",
             "Tired of battling the Keyword Kraken, a beast feasting on poorly optimized search results!",
@@ -189,7 +190,7 @@ import Background from "../components/Background.astro";
         title='VI. The Temple of Templates'
         chapter={6}
         question={{
-          text: "Which protocol should MonoMax choose to enable authentication?",
+          text: "Which protocol should MonoMax choose to enable frontend authentication?",
           answers: [
             "Embrace the GraphQL Guardians, protectors of the powerful query language!",
             "Join forces with the REST Rangers, champions of the classic API design!",
@@ -208,7 +209,7 @@ import Background from "../components/Background.astro";
           From the shimmering pool, a legion of Template Titans arises, each a
           master of their own frontend domain. Giving up his templating powers,
           MonoMax realises that he now has to find other ways to have the power
-          of authentication.
+          of frontend authentication.
         </p>
       </Chapter>
       <Chapter
@@ -223,8 +224,8 @@ import Background from "../components/Background.astro";
         }}
       >
         <p>
-          At the point where MonoMax chose his future protocol, a mission
-          comes his way: building a secure eLearning platform with personalized
+          At the point where MonoMax chose his future protocol, a mission comes
+          his way: building a secure eLearning platform with personalized
           content for each user. This task would have been a breeze for MonoMax,
           but now, he finds himself overwhelmed. He needs to coordinate with a
           multitude of specialized superheroes to ensure seamless integration of
@@ -277,16 +278,31 @@ import Background from "../components/Background.astro";
           balance between the strengths of monolithic and headless CMSs.
         </p>
       </Chapter>
-      <Chapter title='XI: The Marvelous ModuMax' chapter={11} 
+      <Chapter
+        title='XI: The Marvelous ModuMax'
+        chapter={11}
         question={{
-text: "You've made it! ♥ I hope you found this journey as exciting to undertake as it was for me to create! If you're curious to delve deeper, check out these pathways:",
-        answers: [
-        {text: "github.com | Dive into the heart of the adventure! Explore the 'Legend of MonoMax' on GitHub.", href: "https://github.com/mariohamann/legend-of-monomax"},
-        {text: "mariohamann.de | Who's behind this digital tale? Visit my personal website to find out more!", href: "https://mariohamann.de/"},
-        {text: "statamic.com | Meet Statamic, my go-to CMS after years of WordPress exploration. A true Modulith!", href: "https://www.statamic.com/"},
-        {text: "getkirby.com | Curious about Kirby? It's widely appreciated in my circle, and their docs are nice.", href: "https://getkirby.com/"},
-        ],
-}}>
+          text: "You've made it! ♥ I hope you found this journey as exciting to undertake as it was for me to create! If you're curious to delve deeper, check out these pathways:",
+          answers: [
+            {
+              text: "github.com | Dive into the heart of the adventure! Explore the 'Legend of MonoMax' on GitHub.",
+              href: "https://github.com/mariohamann/legend-of-monomax",
+            },
+            {
+              text: "mariohamann.de | Who's behind this digital tale? Visit my personal website to find out more!",
+              href: "https://mariohamann.de/",
+            },
+            {
+              text: "statamic.com | Meet Statamic, my go-to CMS after years of WordPress exploration. A true Modulith!",
+              href: "https://www.statamic.com/",
+            },
+            {
+              text: "getkirby.com | Curious about Kirby? It's widely appreciated in my circle, and their docs are nice.",
+              href: "https://getkirby.com/",
+            },
+          ],
+        }}
+      >
         <p>
           And so, ModuMax continues her journey, protecting the city with her
           newfound strength and flexibility, always ready to build
@@ -305,28 +321,65 @@ text: "You've made it! ♥ I hope you found this journey as exciting to undertak
       class='relative z-0 ease-linear transition-opacity opacity-0 pointer-events-none'
     >
       <Background />
+      <Transition from={0} text='Loading Audio...' />
+      <Transition
+        from={1}
+        text='Expect the unique with Statamic – generic clones not included.'
+      />
+      <Transition
+        from={2}
+        text="Static Site Caching with forms?! Starter Kit 'Peak' is a peek away."
+      />
+      <Transition
+        from={3}
+        text='Local or Algolia search? Choose your weapon – or find more on the marketplace.'
+      />
+      <Transition
+        from={4}
+        text='Flysystem for asset storage: local, remote or both.'
+      />
+      <Transition
+        from={5}
+        text='Choose your templating: Antlers, Blade, or headless CMS via REST/GraphQL.'
+      />
+      <Transition
+        from={6}
+        text='Protect your content: user, IP, password or DIY-custom checks.'
+      />
+      <Transition from={7} text='Start simple, and adapt as you grow.' />
+      <Transition
+        from={8}
+        text='Simplify your tech stack - even no database needed!'
+        '
+      />
+      <Transition
+        from={9}
+        text='A CMS of firm guidelines, but flexible rules.'
+      />
+
+      <Transition
+        from={10}
+        text='JAMStack.org lists 350+ SSGs and 100+ headless CMS. Only Statamic appears in both.'
+      />
     </div>
     <div
-    id="navigation" 
+      id='navigation'
       class='fixed top-0 left-0 w-full h-1 opacity-0 transition-all duration-150'
     >
-        <div
-          class='bg-secondary opacity-50 absolute w-full h-full'
-        >
-        </div>
-        {
-          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((chapter) => (
+      <div class='bg-secondary opacity-50 absolute w-full h-full'></div>
+      {
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((chapter) => (
+          <div
+            class='absolute h-full'
+            style={{ left: `${(chapter * 100) / 11}%; width: ${100 / 11}%` }}
+          >
             <div
-              class='absolute h-full'
-              style={{ left: `${(chapter * 100) / 11}%; width: ${100 / 11}%` }}
-            >
-              <div
-                id=`navigation-${chapter + 1}`
-                class='bg-secondary w-0 absolute left-0 h-full top-0 transition-all ease-linear'
-              />
-            </div>
-          ))
-        }
+              id={`navigation-${chapter + 1}`}
+              class='bg-secondary w-0 absolute left-0 h-full top-0 transition-all ease-linear'
+            />
+          </div>
+        ))
+      }
     </div>
   </body>
 </html>

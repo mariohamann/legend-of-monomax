@@ -1,0 +1,18 @@
+---
+export interface Props {
+  text: string;
+  from: number;
+}
+
+const { text, from } = Astro.props;
+---
+
+<div
+  id=`transition-${from}`
+  class='fixed flex-col justify-center items-center top-0 left-0 h-screen w-full text-left hidden mix-blend-screen'
+>
+  <div class='text-center sm:px-0 max-w-xl px-8 text-3xl'>
+    {from > 0 && <p class='text-lg'>Statamic Wisdom {from}/10</p>}
+    <p class='mt-8'>{text}</p>
+  </div>
+</div>
