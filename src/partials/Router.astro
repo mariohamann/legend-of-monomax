@@ -120,7 +120,7 @@
           // check if 3000s were made from timestamp on, if not set transitionManager.pauseTransition  to difference
           const endTime = Date.now();
           const elapsedTime = endTime - startTime;
-          pauseTime = elapsedTime < 3000 ? 3000 - elapsedTime : 750;
+          pauseTime = elapsedTime < 5000 ? 5000 - elapsedTime : 0;
         }
 
         await transitionManager.pauseTransition(pauseTime);
