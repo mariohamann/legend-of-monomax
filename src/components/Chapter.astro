@@ -38,6 +38,9 @@ const { chapter, question, title, transition } = Astro.props;
     <img
       src=`/images/chapter-${chapter}.png`
       class='max-w-4xl mx-auto w-full my-12 lg:my-16 md:rounded-xl'
+      loading='lazy'
+      width='200'
+      height='115'
     />
   </div>
   <div class='px-8 sm:px-0 max-w-xl mx-auto gap-y-5 flex-col flex'>
