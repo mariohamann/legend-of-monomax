@@ -99,7 +99,10 @@
       window.location.hash = "#chapter-1";
 
       const transitionManager = new TransitionManager();
-      await transitionManager.startTransition();
+      transitionManager.startTransition();
+
+      // set timeStamp here
+      const startTime = Date.now();
 
       try {
         await audioPlayer.audioContext.resume();
@@ -112,9 +115,17 @@
       });
 
       audioPlayer.loadAudioBuffers().then(async () => {
-        await transitionManager.pauseTransition(0);
-        transitionManager.endTransition();
+        let pauseTime = 750;
+        if (iOS()) {
+          // check if 3000s were made from timestamp on, if not set transitionManager.pauseTransition  to difference
+          const endTime = Date.now();
+          const elapsedTime = endTime - startTime;
+          pauseTime = elapsedTime < 3000 ? 3000 - elapsedTime : 750;
+        }
+
+        await transitionManager.pauseTransition(pauseTime);
         audioPlayer.switchToNextAudio(0);
+        transitionManager.endTransition();
       });
     });
 
@@ -278,7 +289,9 @@
     }
 
     public async pauseTransition(delay?: number) {
-      await this.pixelAnimation.sleep(delay === 0 ? 0 : this.duration.delay);
+      await this.pixelAnimation.sleep(
+        delay !== undefined ? delay : this.duration.delay
+      );
       window.scrollTo({
         top: 0,
       });
