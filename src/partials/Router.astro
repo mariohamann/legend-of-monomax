@@ -220,7 +220,6 @@
 
   async function onAudioEvent(event: any) {
     const duration = event.detail.duration;
-    console.log("duration", duration, event.detail.part);
     if (chapter === 0 || event.detail.part === 0) {
       return;
     }
@@ -233,6 +232,7 @@
     private navigation: HTMLElement;
     private navigationElement: HTMLElement;
     private transitionElement: HTMLElement;
+    private transitionContentElement: HTMLElement;
     private pixelAnimation: PixelAnimation;
     private duration = {
       in: 750,
@@ -248,6 +248,9 @@
       )!;
       this.transitionElement = document.getElementById(
         `transition-${getChapterFromUrl() - 1}`
+      )!;
+      this.transitionContentElement = document.getElementById(
+        `transition-content-${getChapterFromUrl() - 1}`
       )!;
 
       this.pixelAnimation = new PixelAnimation({
@@ -269,21 +272,29 @@
       this.navigationElement.style.transitionDuration = `${
         this.duration.in + this.duration.delay + this.duration.out
       }ms`;
+      this.transitionContentElement.style.transitionDuration = `${
+        (this.duration.in * 1) / 2
+      }ms`;
 
       // 2. set defaults before transition
       this.overlay.style.opacity = "0%";
       document
-        .querySelectorAll('[id^="transition-"]')
+        .querySelectorAll('[id^="transition-"].fixed')
         .forEach((transitionElement) => {
           transitionElement.style.display = "none";
         });
 
       this.transitionElement.style.display = "flex";
+      this.transitionContentElement.style.opacity = "0%";
 
       // 3. start transition
       this.navigation.style.opacity = "100%";
       this.overlay.style.opacity = "100%";
       this.navigationElement.style.width = "100%";
+
+      setTimeout(() => {
+        this.transitionContentElement.style.opacity = "100%";
+      }, (this.duration.in * 1) / 2);
 
       await this.pixelAnimation.createPixels(this.duration.in);
     }
@@ -303,10 +314,14 @@
       // 1. set transition duration
       this.overlay.style.transitionDuration = `${this.duration.out}ms`;
       this.navigation.style.transitionDuration = `${this.duration.out}ms`;
+      this.transitionContentElement.style.transitionDuration = `${
+        (this.duration.out * 1) / 2
+      }ms`;
 
       // 2. start transition
       this.overlay.style.opacity = "0%";
       this.navigation.style.opacity = "20%";
+      this.transitionContentElement.style.opacity = "0%";
       await this.pixelAnimation.removePixels(this.duration.out);
       this.transitionElement.style.display = "none";
     }
