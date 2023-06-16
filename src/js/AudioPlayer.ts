@@ -111,10 +111,11 @@ export class AudioPlayer {
       this.currentGainNode = endingSource.gainNode;
 
       loopGainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
-      loopGainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
-      this.currentGainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-      this.currentGainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.5);
+      loopGainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.5);
+      this.currentGainNode.gain.setValueAtTime(0.01, this.audioContext.currentTime);
+      this.currentGainNode.gain.exponentialRampToValueAtTime(1, this.audioContext.currentTime + 0.5);
 
+      loopSource.stop(this.audioContext.currentTime + 0.5);
       loopSource.stop(this.audioContext.currentTime + 0.5);
 
       this.currentSource.onended = () => {
@@ -176,11 +177,20 @@ export class AudioPlayer {
     if (this.currentSource) {
       const elapsedTime = this.audioContext.currentTime - (this.currentSourceStartTime || 0);
       const loopTimeRemaining = this.currentSource.buffer!.duration - (elapsedTime % this.currentSource.buffer!.duration);
-      const eventDuration = crossfade ? endingAudio.duration - 0.5 : loopTimeRemaining + (endingAudio ? endingAudio.duration : 0);
+
+      let eventDuration;
+
+      if (crossfade) {
+        eventDuration = loopTimeRemaining;
+      } else {
+        eventDuration = loopTimeRemaining + (endingAudio ? endingAudio.duration : 0);
+      }
+
       this.emitAudioEvent({ duration: eventDuration });
     }
 
     this.currentPart = newPart;
+
   }
 
   private emitAudioEvent(event: AudioEvent) {
