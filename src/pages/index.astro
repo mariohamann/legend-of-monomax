@@ -321,45 +321,48 @@ import Transition from "../components/Transition.astro";
       class='relative z-0 ease-linear transition-opacity opacity-0 pointer-events-none'
     >
       <Background />
-      <Transition from={0} text='Loading Audio...' />
+      <Transition
+        from={0}
+        text='<span id="ios-warning">iDevice user! Please make sure to turn off your silent switch.</span>'
+      />
       <Transition
         from={1}
-        text='Expect the unique with Statamic – generic clones not included.'
+        text='Expect the unique with Statamic.<br/>Generic clones not included.'
       />
       <Transition
         from={2}
-        text="Static Site Caching with forms?! Starter Kit 'Peak' is a peek away."
+        text="Static Site Caching with forms?!<br/>Starter Kit 'Peak' is a peek away."
       />
       <Transition
         from={3}
-        text='Local or Algolia search? Choose your weapon – or find more on the marketplace.'
+        text='Local or Algolia search?<br/>Choose your weapon – or find more on the marketplace.'
       />
       <Transition
         from={4}
-        text='Flysystem for asset storage: local, remote or both.'
+        text='Flysystem for asset storage:<br/>local, remote or both.'
       />
       <Transition
         from={5}
-        text='Choose your templating: Antlers, Blade, or headless CMS via REST/GraphQL.'
+        text='Choose your templating:<br/>Antlers, Blade, or headless CMS via REST/GraphQL.'
       />
       <Transition
         from={6}
-        text='Protect your content: user, IP, password or DIY-custom checks.'
+        text='Protect your content:<br/>user, IP, password or DIY-custom checks.'
       />
       <Transition from={7} text='Start simple, and adapt as you grow.' />
       <Transition
         from={8}
-        text='Simplify your tech stack - even no database needed!'
+        text='Simplify your tech stack -<br/> even no database needed!'
         '
       />
       <Transition
         from={9}
-        text='A CMS of firm guidelines, but flexible rules.'
+        text='A CMS of firm guidelines,<br/> but flexible rules.'
       />
 
       <Transition
         from={10}
-        text='JAMStack.org lists 350+ SSGs and 100+ headless CMS. Only Statamic appears in both.'
+        text='JAMStack.org lists 350+ SSGs and 100+ headless CMS.<br/> Only Statamic appears in both.'
       />
     </div>
     <div

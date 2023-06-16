@@ -1,5 +1,6 @@
 type AudioEvent = {
   duration: number;
+  part: number;
 };
 
 type AudioBuffers = {
@@ -63,6 +64,13 @@ export class AudioPlayer {
     return fetch(url)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
+        // emit event to update progress
+
+        const audioLoadedEvent = new CustomEvent("audioLoaded", {
+          detail: url,
+        });
+        window.dispatchEvent(audioLoadedEvent);
+
         return new Promise((resolve, reject) => {
           this.audioContext.decodeAudioData(arrayBuffer, resolve, reject);
         });
@@ -186,7 +194,7 @@ export class AudioPlayer {
         eventDuration = loopTimeRemaining + (endingAudio ? endingAudio.duration : 0);
       }
 
-      this.emitAudioEvent({ duration: eventDuration });
+      this.emitAudioEvent({ duration: eventDuration, part: newPart });
     }
 
     this.currentPart = newPart;

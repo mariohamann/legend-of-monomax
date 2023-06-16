@@ -93,10 +93,13 @@
       }
 
       if (iOS()) {
-        alert(
-          "Hello, iDevice user! Please make sure to turn off your device's silent switch."
-        );
+        document.getElementById("ios-warning")!.style.display = "block";
       }
+
+      window.location.hash = "#chapter-1";
+
+      const transitionManager = new TransitionManager();
+      await transitionManager.startTransition();
 
       try {
         await audioPlayer.audioContext.resume();
@@ -104,12 +107,15 @@
         console.error("Failed to resume AudioContext:", e);
       }
 
-      await audioPlayer.loadAudioBuffers().then(() => {
-        console.log("Audio buffers loaded.");
+      window.addEventListener("audioLoaded", () => {
+        raiseLoadingPercentage();
       });
 
-      window.location.hash = "#chapter-1";
-      await audioPlayer.switchToNextAudio(0);
+      audioPlayer.loadAudioBuffers().then(async () => {
+        await transitionManager.pauseTransition(0);
+        transitionManager.endTransition();
+        audioPlayer.switchToNextAudio(0);
+      });
     });
 
   window.addEventListener("hashchange", onUrlChange);
@@ -162,10 +168,40 @@
     if (audioPlayer) {
       await audioPlayer.switchToNextAudio(currentChapter - 1);
     } else {
-      const transitionManager = new TransitionManager(4000);
-      await transitionManager.makeTransition();
+      const transitionManager = new TransitionManager();
+      if (currentChapter === 1) {
+        await transitionManager.startTransition();
+        await transitionManager.pauseTransition(0);
+        let tasks = [];
+        for (let i = 0; i < 20; i++) {
+          tasks.push(
+            new Promise((resolve) => {
+              setTimeout(() => {
+                raiseLoadingPercentage();
+                resolve();
+              }, i * 50);
+            })
+          );
+        }
+
+        // wait for all tasks to complete
+        await Promise.all(tasks);
+
+        // when done, end transition
+        await transitionManager.endTransition();
+        return;
+      }
+
+      transitionManager.makeTransition();
     }
   }
+
+  const raiseLoadingPercentage = () => {
+    const loadingPercentage = document.getElementById("loading-percentage")!;
+    loadingPercentage.innerHTML = `${
+      parseInt(loadingPercentage.innerHTML) + 5
+    }`;
+  };
 
   async function onUrlChange() {
     await setChapterAccordingToHash(true);
@@ -173,9 +209,8 @@
 
   async function onAudioEvent(event: any) {
     const duration = event.detail.duration;
-    if (chapter === 0) {
-      const transitionManager = new TransitionManager();
-      await transitionManager.makeTransition();
+    console.log("duration", duration, event.detail.part);
+    if (chapter === 0 || event.detail.part === 0) {
       return;
     }
     const transitionManager = new TransitionManager(duration * 1000);
@@ -242,8 +277,8 @@
       await this.pixelAnimation.createPixels(this.duration.in);
     }
 
-    public async pauseTransition() {
-      await this.pixelAnimation.sleep(this.duration.delay);
+    public async pauseTransition(delay?: number) {
+      await this.pixelAnimation.sleep(delay === 0 ? 0 : this.duration.delay);
       window.scrollTo({
         top: 0,
       });

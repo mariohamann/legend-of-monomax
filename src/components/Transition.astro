@@ -12,7 +12,15 @@ const { text, from } = Astro.props;
   class='fixed flex-col justify-center items-center top-0 left-0 h-screen w-full text-left hidden mix-blend-screen'
 >
   <div class='text-center sm:px-0 max-w-xl px-8 text-3xl'>
-    {from > 0 && <p class='text-lg'>Statamic Wisdom {from}/10</p>}
-    <p class='mt-8'>{text}</p>
+    {
+      from > 0 ? (
+        <p class='text-lg'>Statamic Wisdom {from}/10</p>
+      ) : (
+        <p>
+          Preparing your adventure: <span id='loading-percentage'>0</span>%
+        </p>
+      )
+    }
+    <p class='mt-8' set:html={text} />
   </div>
 </div>
