@@ -9,6 +9,7 @@ type AudioBuffers = {
 type AudioData = {
   loop?: string;
   ending?: string;
+  crossfades?: Boolean;
 };
 
 export class AudioPlayer {
@@ -17,6 +18,7 @@ export class AudioPlayer {
   private currentPart: number | null;
   private currentSource: AudioBufferSourceNode | null;
   private currentSourceStartTime: number | null;
+  private currentGainNode: GainNode | null;
 
   constructor(private audioData: AudioData[]) {
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -24,6 +26,7 @@ export class AudioPlayer {
     this.currentPart = null;
     this.currentSource = null;
     this.currentSourceStartTime = null;
+    this.currentGainNode = null;
   }
 
   async loadAudioBuffers() {
@@ -66,13 +69,17 @@ export class AudioPlayer {
       });
   }
 
-  private playAudioBuffer(buffer: AudioBuffer, loop: boolean) {
+  private playAudioBuffer(buffer: AudioBuffer, loop: boolean, startTime = 0) {
     const source = this.audioContext.createBufferSource();
+    const gainNode = this.audioContext.createGain();
+
     source.buffer = buffer;
     source.loop = loop;
-    source.connect(this.audioContext.destination);
-    source.start();
-    return source;
+    source.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    source.start(0, startTime);
+
+    return { source, gainNode };
   }
 
   switchToNextAudio(newPart: number) {
@@ -87,20 +94,50 @@ export class AudioPlayer {
 
     let nextLoopAudio = this.audioBuffers[`${newPart}-loop`];
     let nextEndingAudio = this.audioBuffers[`${newPart}-ending`];
-    let endingAudio =
-      this.currentPart && this.currentPart !== newPart
-        ? this.audioBuffers[`${this.currentPart}-ending`]
-        : null;
+    let endingAudio = this.currentPart !== null && this.currentPart !== newPart ? this.audioBuffers[`${this.currentPart}-ending`] : null;
 
-    if (this.currentSource) {
+    let crossfade = this.audioData[this.currentPart]?.crossfades || false;
+
+    if (crossfade && this.currentSource && this.currentGainNode) {
+      let elapsedTime = this.audioContext.currentTime - this.currentSourceStartTime;
+      let loopTime = elapsedTime % this.currentSource.buffer.duration;
+
+      // If we are in crossfade mode, play both the loop and ending audios at once, then fade out the loop
+      let loopSource = this.currentSource;
+      let loopGainNode = this.currentGainNode;
+      let endingSource = this.playAudioBuffer(endingAudio, false, loopTime);
+
+      this.currentSource = endingSource.source;
+      this.currentGainNode = endingSource.gainNode;
+
+      loopGainNode.gain.setValueAtTime(1, this.audioContext.currentTime);
+      loopGainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
+      this.currentGainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+      this.currentGainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.5);
+
+      loopSource.stop(this.audioContext.currentTime + 0.5);
+
+      this.currentSource.onended = () => {
+        if (nextLoopAudio) {
+          this.currentSource = this.playAudioBuffer(nextLoopAudio, true).source;
+        } else if (nextEndingAudio) {
+          this.currentSource = this.playAudioBuffer(nextEndingAudio, false).source;
+          this.currentSource.onended = () => {
+            this.currentSource = null;
+          };
+        } else {
+          this.currentSource = null;
+        }
+      };
+    } else if (this.currentSource) {
       this.currentSource.onended = () => {
         if (endingAudio) {
           const source = this.playAudioBuffer(endingAudio, false);
-          source.onended = () => {
+          source.source.onended = () => {
             if (nextLoopAudio) {
-              this.currentSource = this.playAudioBuffer(nextLoopAudio, true);
+              this.currentSource = this.playAudioBuffer(nextLoopAudio, true).source;
             } else if (nextEndingAudio) {
-              this.currentSource = this.playAudioBuffer(nextEndingAudio, false);
+              this.currentSource = this.playAudioBuffer(nextEndingAudio, false).source;
               this.currentSource.onended = () => {
                 this.currentSource = null;
               };
@@ -110,9 +147,9 @@ export class AudioPlayer {
           };
         } else {
           if (nextLoopAudio) {
-            this.currentSource = this.playAudioBuffer(nextLoopAudio, true);
+            this.currentSource = this.playAudioBuffer(nextLoopAudio, true).source;
           } else if (nextEndingAudio) {
-            this.currentSource = this.playAudioBuffer(nextEndingAudio, false);
+            this.currentSource = this.playAudioBuffer(nextEndingAudio, false).source;
             this.currentSource.onended = () => {
               this.currentSource = null;
             };
@@ -123,32 +160,28 @@ export class AudioPlayer {
       };
     } else {
       if (nextLoopAudio) {
-        this.currentSource = this.playAudioBuffer(nextLoopAudio, true);
+        let output = this.playAudioBuffer(nextLoopAudio, true);
+        this.currentSource = output.source;
+        this.currentGainNode = output.gainNode; // Remember to set this.currentGainNode!
       } else if (nextEndingAudio) {
-        this.currentSource = this.playAudioBuffer(nextEndingAudio, false);
-        this.currentSource.onended = () => {
-          this.currentSource = null;
-        };
+        let output = this.playAudioBuffer(nextEndingAudio, false);
+        this.currentSource = output.source;
+        this.currentGainNode = output.gainNode; // Remember to set this.currentGainNode!
       } else {
         this.currentSource = null;
+        this.currentGainNode = null; // Remember to set this.currentGainNode!
       }
     }
 
     if (this.currentSource) {
-      const elapsedTime =
-        this.audioContext.currentTime - (this.currentSourceStartTime || 0);
-      const loopTimeRemaining =
-        this.currentSource.buffer!.duration -
-        (elapsedTime % this.currentSource.buffer!.duration);
-      const eventDuration =
-        loopTimeRemaining + (endingAudio ? endingAudio.duration : 0);
+      const elapsedTime = this.audioContext.currentTime - (this.currentSourceStartTime || 0);
+      const loopTimeRemaining = this.currentSource.buffer!.duration - (elapsedTime % this.currentSource.buffer!.duration);
+      const eventDuration = crossfade ? endingAudio.duration - 0.5 : loopTimeRemaining + (endingAudio ? endingAudio.duration : 0);
       this.emitAudioEvent({ duration: eventDuration });
     }
 
     this.currentPart = newPart;
   }
-
-
 
   private emitAudioEvent(event: AudioEvent) {
     const audioEvent = new CustomEvent("audioEvent", {
