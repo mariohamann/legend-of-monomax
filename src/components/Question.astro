@@ -86,6 +86,7 @@ const { to, question } = Astro.props;
       },
       body: JSON.stringify({
         message: _event.target[0].value,
+        ref: "legend-of-monomax",
       }),
     })
       .then(() => {
