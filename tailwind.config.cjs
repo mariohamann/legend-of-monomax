@@ -12,7 +12,7 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        'lg': '1.25rem',
+        'lg': '1.4rem',
       },
     },
   },
