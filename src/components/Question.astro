@@ -7,11 +7,54 @@ export interface Props {
   };
 }
 
+const SUBMIT_FORM_URL = import.meta.env.PROD
+  ? "https://submit-form.com/YnAwZjk5"
+  : "https://submit-form.com/echo";
+
 const { to, question } = Astro.props;
 ---
 
-<div class='bg-secondary text-primary p-6 opacity-90 rounded-lg'>
-  <p class='mb-4'>{question.text}</p>
+<div class='bg-secondary text-primary p-6 opacity-90 rounded-lg space-y-4'>
+  <p>{question.text}</p>
+  {
+    to === 12 && (
+      <>
+        <p>
+          I'm Mario, and I love working on projects to learn and share. If you
+          liked this journey, you can follow me on{" "}
+          <a href='https://indieweb.social/@mariohamann'>Mastodon</a> or
+          subscribe to my newsletter
+          <a href='https://formspark.io/legal/privacy-policy/'>(Privacy)</a>:
+        </p>
+        <div>
+          <form class='w-full my-4 flex gap-4' data-url={SUBMIT_FORM_URL}>
+            <label for='email-address' class='sr-only'>
+              Email address
+            </label>
+            <input
+              id='email-address'
+              name='email'
+              type='email'
+              autocomplete='email'
+              required
+              class='min-w-0 w-full flex-auto rounded-md text-lg border-2 placeholder:text-primary/50 border-primary bg-secondary px-4 py-2 text-secondary-100 ring-0 ring-inset ring-secondary focus:ring-2 focus:ring-inset focus:ring-primary/50 sm:leading-6'
+              placeholder='Enter your email'
+            />
+            <button
+              type='submit'
+              class='border-2 outline-none rounded-md border-primary bg-primary text-secondary px-4 py-2 hover:bg-secondary focus:bg-secondary hover:text-primary focus:text-primary transition-colors duration-300'
+            >
+              Subscribe
+            </button>
+          </form>
+        </div>
+        <p class='mb-2'>
+          If you're curious to delve deeper, check out these links:
+        </p>
+      </>
+    )
+  }
+
   <div class='w-full space-y-2'>
     {
       question.answers.map((answer, index) => (
@@ -31,3 +74,26 @@ const { to, question } = Astro.props;
     }
   </div>
 </div>
+
+<script>
+  document.querySelector("form").addEventListener("submit", (_event) => {
+    _event.preventDefault();
+    fetch(_event.srcElement.dataset.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        message: _event.target[0].value,
+      }),
+    })
+      .then(() => {
+        window.alert("Thanks for subscribing!");
+        document.getElementById("email-address").value = "";
+      })
+      .catch(() =>
+        window.alert("Something went wrong. Please try again later.")
+      );
+  });
+</script>
