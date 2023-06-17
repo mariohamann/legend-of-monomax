@@ -371,5 +371,12 @@
       document.title,
       location.href
     );
+
+    const linkElement = document.querySelector("link[rel=icon]")!;
+    if (chapter > 8) {
+      linkElement.href = "/images/favicon-modumax.png";
+    } else {
+      linkElement.href = "/images/favicon-monomax.png";
+    }
   }
 </script>
