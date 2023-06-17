@@ -10,13 +10,9 @@ export interface Props {
     text: string;
     answers: string[] | { text: string; href: string }[];
   };
-  transition?: {
-    short: string;
-    long: string;
-  };
 }
 
-const { chapter, question, title, transition } = Astro.props;
+const { chapter, question, title } = Astro.props;
 ---
 
 <div id=`chapter-${chapter}` class='mix-blend-screen relative top-0 left-0'>
