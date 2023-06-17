@@ -34,7 +34,9 @@ const { chapter, question, title } = Astro.props;
     <img
       src=`/images/chapter-${chapter}.png`
       class='max-w-4xl mx-auto w-full my-12 lg:my-16 md:rounded-xl'
-      loading='lazy'
+      loading={chapter === 1
+        ? "eager" /* fixes a bug for chapter 1 on iPhones */
+        : "lazy"}
       width='200'
       height='115'
     />
