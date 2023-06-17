@@ -1,0 +1,53 @@
+<head>
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <link rel='icon' href='/favicon.ico' />
+  <title>The Legend of Monomax – A Tale of Transformation</title>
+  <meta property='og:title' content='The Legend of MonoMax' />
+  <meta
+    name='description'
+    content='Join the digital adventure of CMS superhero transformation.'
+  />
+  <meta
+    property='og:description'
+    content='Join the digital adventure of CMS superhero transformation.'
+  />
+  <meta property='og:image' content='/images/og.jpg' />
+  <!-- Twitter -->
+  <meta property='twitter:card' content='summary_large_image' />
+  <meta
+    property='twitter:url'
+    content='https://legend-of-monomax.mariohamann.de/'
+  />
+  <meta property='twitter:title' content='The Legend of MonoMax' />
+  <meta
+    property='twitter:description'
+    content='Join the digital adventure of CMS superhero transformation.'
+  />
+  <meta property='twitter:image' content='/images/og.jpg' />
+
+  <style is:global>
+    img {
+      image-rendering: pixelated;
+    }
+    /* vt323-regular - latin */
+    @font-face {
+      font-display: block; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+      font-family: "VT323";
+      font-style: normal;
+      font-weight: 400;
+      src: url("/fonts/vt323-v17-latin-regular.woff2") format("woff2"),
+        /* Chrome 36+, Opera 23+, Firefox 39+ */
+          url("/fonts/vt323-v17-latin-regular.woff") format("woff"); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+    }
+    .mix-blend-screen {
+      transform: translate3d(0, 0, 0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
+    }
+
+    canvas {
+      @apply mix-blend-plus-lighter;
+    }
+  </style>
+</head>

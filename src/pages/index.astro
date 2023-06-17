@@ -1,5 +1,6 @@
 ---
 import Router from "../partials/Router.astro";
+import Head from "../partials/Head.astro";
 import Chapter from "../components/Chapter.astro";
 import Background from "../components/Background.astro";
 import Transition from "../components/Transition.astro";
@@ -7,56 +8,7 @@ import Transition from "../components/Transition.astro";
 
 <!DOCTYPE html>
 <html lang='en' class='bg-[#110E1D]'>
-  <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <link rel='icon' href='/favicon.ico' />
-    <title>The Legend of Monomax – A Tale of Transformation</title>
-    <meta property='og:title' content='The Legend of MonoMax' />
-    <meta
-      property='og:description'
-      content='Join the digital adventure of CMS superhero transformation.'
-    />
-    <meta property='og:image' content='/images/og.jpg' />
-    <!-- Twitter -->
-    <meta property='twitter:card' content='summary_large_image' />
-    <meta
-      property='twitter:url'
-      content='https://legend-of-monomax.mariohamann.de/'
-    />
-    <meta property='twitter:title' content='The Legend of MonoMax' />
-    <meta
-      property='twitter:description'
-      content='Join the digital adventure of CMS superhero transformation.'
-    />
-    <meta property='twitter:image' content='/images/og.jpg' />
-
-    <style is:global>
-      img {
-        image-rendering: pixelated;
-        /* filter: hue-rotate(-20deg); */
-      }
-      /* vt323-regular - latin */
-      @font-face {
-        font-display: block; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-        font-family: "VT323";
-        font-style: normal;
-        font-weight: 400;
-        src: url("/fonts/vt323-v17-latin-regular.woff2") format("woff2"),
-          /* Chrome 36+, Opera 23+, Firefox 39+ */
-            url("/fonts/vt323-v17-latin-regular.woff") format("woff"); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-      }
-      .mix-blend-screen {
-        transform: translate3d(0, 0, 0);
-        -webkit-backface-visibility: hidden;
-        -webkit-perspective: 1000;
-      }
-
-      canvas {
-        @apply mix-blend-plus-lighter;
-      }
-    </style>
-  </head>
+  <Head />
   <body
     x-data
     class='font-code text-lg text-secondary min-h-screen text-opacity-[95%]'
@@ -66,6 +18,7 @@ import Transition from "../components/Transition.astro";
     >
       <Chapter
         title='The Legend of MonoMax'
+        alt='Pixel art panorama of superhero MonoMax in pink attire and cape standing defiantly in front of a roaring fire at night.'
         chapter={0}
         question={{
           text: "Do you want a handcrafted retro soundtrack to accompany your heroic journey with MonoMax? It will give you +10 in nostalgia and immersive gameplay.",
@@ -88,7 +41,11 @@ import Transition from "../components/Transition.astro";
           evolution of digital content management. Gear up for an epic ride!
         </p>
       </Chapter>
-      <Chapter title='I. The Power Paradox' chapter={1}>
+      <Chapter
+        title='I. The Power Paradox'
+        alt='Pixel art of a pink superhero soaring over a city at night.'
+        chapter={1}
+      >
         <p>
           In a vibrant pixelated city, MonoMax soars through the digital sky. As
           an all-encompassing CMS superhero, he handles any web content
@@ -106,6 +63,7 @@ import Transition from "../components/Transition.astro";
       </Chapter>
       <Chapter
         title='II. The Ability Abyss'
+        alt='Pixel art of a pink superhero looking over a cityscape at night.'
         chapter={2}
         question={{
           text: "Why should MonoMax drop his form handling powers?",
@@ -127,6 +85,7 @@ import Transition from "../components/Transition.astro";
       </Chapter>
       <Chapter
         title='III. The Enigmatic Envelope'
+        alt='Panoramic pixel art of a pink superhero standing in front of a large, mysterious computer terminal inside a cyberpunk library filled with server racks, LEDs, tablets, computers, and monitors, located in a cave setting at night.'
         chapter={3}
         question={{
           text: "Why should MonoMax drop his search powers?",
@@ -156,6 +115,7 @@ import Transition from "../components/Transition.astro";
       <Chapter
         title='IV. The Search Stone'
         chapter={4}
+        alt='Pixel art panorama of a strong pink superhero inside a cave illuminated by shimmering crystalline light at night, wide shot.'
         question={{
           text: "Why should MonoMax drop his assets saving power?",
           answers: [
@@ -185,6 +145,7 @@ import Transition from "../components/Transition.astro";
       <Chapter
         title='V. The Cryptic Cloud'
         chapter={5}
+        alt='Panoramic pixel art of a strong pink superhero standing on a pedestal surrounded by hovering data crystals in Cryptic Cloud, a mystical realm hidden within the swirling mists of cyberspace, depicted at night, wide shot.'
         question={{
           text: "Why should MonoMax drop his templating power?",
           answers: [
@@ -211,6 +172,7 @@ import Transition from "../components/Transition.astro";
       <Chapter
         title='VI. The Temple of Templates'
         chapter={6}
+        alt='Panoramic pixel art of a pink superhero in an ancient temple structure, hidden deep within the canyons of a night-time digital computer LED landscape, wide shot.'
         question={{
           text: "Which protocol should MonoMax choose to enable frontend authentication?",
           answers: [
@@ -237,6 +199,7 @@ import Transition from "../components/Transition.astro";
       <Chapter
         title='VII. The Dilemma of Disintegration'
         chapter={7}
+        alt='Panoramic pixel art of a row of colorful and diverse superheroes, standing against a city backdrop at night, wide shot.'
         question={{
           text: "How should ModuMax handle this mission?",
           answers: [
@@ -255,7 +218,11 @@ import Transition from "../components/Transition.astro";
           handle this mission.
         </p>
       </Chapter>
-      <Chapter title='VIII: The Chaos of Collaboration' chapter={8}>
+      <Chapter
+        title='VIII: The Chaos of Collaboration'
+        chapter={8}
+        alt='Pixel art of a chaotic scene featuring a diverse group of superheroes, including a pink one, in action at night.'
+      >
         <p>
           As MonoMax attempts to assemble the specialized superheroes, harmony
           proves elusive. Each superhero's unique abilities clash, creating a
@@ -269,7 +236,11 @@ import Transition from "../components/Transition.astro";
           the merits of his decision to release his powers.
         </p>
       </Chapter>
-      <Chapter title='IX: The Metamorphosis of MonoMax' chapter={9}>
+      <Chapter
+        title='IX: The Metamorphosis of MonoMax'
+        chapter={9}
+        alt='Pixel art depicting the transformation of a pink superhero from male to female at night.'
+      >
         <p>
           Amidst the tumult, a spark of realization ignites within MonoMax. He
           comprehends that he can reclaim his powers and still call upon his
@@ -283,7 +254,11 @@ import Transition from "../components/Transition.astro";
           powers while remaining open to collaboration.
         </p>
       </Chapter>
-      <Chapter title='X: The Triumphant Transformation' chapter={10}>
+      <Chapter
+        title='X: The Triumphant Transformation'
+        chapter={10}
+        alt='Pixel art of a pink superheroine soaring over a city illuminated by fireworks at night.'
+      >
         <p>
           Emerging from the remnants of MonoMax, ModuMax takes flight, ushering
           in a new era of hope and dynamism in the digital realm. Her
@@ -300,6 +275,7 @@ import Transition from "../components/Transition.astro";
       </Chapter>
       <Chapter
         title='XI: The Marvelous ModuMax'
+        alt='Pixel art of a pink superheroine gazing over a cityscape at night.'
         chapter={11}
         question={{
           text: "You've made it! ♥ I hope you found this journey as exciting to undertake as it was for me to create! If you're curious to delve deeper, check out these pathways:",
@@ -338,7 +314,6 @@ import Transition from "../components/Transition.astro";
         </p>
         <p>– The End.</p>
       </Chapter>
-      <Router />
     </div><div
       id='overlay'
       class='relative z-0 ease-linear transition-opacity opacity-0 pointer-events-none'
@@ -407,5 +382,6 @@ import Transition from "../components/Transition.astro";
         ))
       }
     </div>
+    <Router />
   </body>
 </html>
