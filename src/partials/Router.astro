@@ -351,6 +351,8 @@
       currentChapter.classList.remove("hidden");
       currentChapter.classList.remove("opacity-0");
     }
+
+    updateDocumentTitle();
   }
 
   function updateDocumentTitle() {
@@ -361,7 +363,7 @@
     const mainTitle = document.querySelector("h1")?.textContent;
 
     // set the document title to the chapter title
-    document.title = `${mainTitle} – ${chapterTitle}`;
+    document.title = `${chapterTitle} – ${mainTitle}`;
 
     // set history state to set current title
     history.replaceState(
